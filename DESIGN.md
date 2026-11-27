@@ -1,58 +1,45 @@
 # SlantIndex
 
-SlantIndex měří, **koho a jak často je slyšet v Českém rozhlase**. Pokrývá všechny pořady všech celoplošných i regionálních stanic za poslední dva roky. Jednotkou je člověk v konkrétním dílu. Jeho váhu určuje počet vystoupení. Tón rozhovoru, délka projevu a odmítnutá pozvání do výpočtu nevstupují.
+SlantIndex sleduje, kdo dostává prostor ve vysílání Českého rozhlasu. Hlavní ukazatel váží veřejně doložené postoje minutami odvysílaného prostoru, včetně repríz. Vedle něj stojí počet původních dílů s danou osobou. Návštěvník tak rozliší **„je často slyšet“** od **„opakovaně dostává nový pořad nebo pozvání“**. Poslechovost ani přesvědčivost měřeny nejsou.
 
-## 1. Co uvidí čtenář
+## Produkt a rozsah první verze
 
-| Pohled | Obsah |
+| Pohled | Výsledek |
 |---|---|
-| Přehled ČRo | Řádek za každou stanici: obě osy za posledních 30 dní, počet vystoupení a pokrytí. Pod tabulkou dvouletý graf vybrané stanice, při otevření za celý ČRo. |
-| Stanice a pořad | Trend, rozložení po stupních škály a seznam osob s počtem vystoupení. Kliknutí na bod nebo sloupec otevře přesné díly zahrnuté do hodnoty. |
-| Redaktor | Hosté v dílech, které moderoval. Vlastní komentáře a moderátorské vstupy mají samostatný přehled. |
-| Osoba | Role, pořady, instituce v době vystoupení, obě hodnocení, zdůvodnění, odkazy a historie oprav. |
-| Instituce | Vystoupení zástupců podle pořadu a období. Odděleně pravidelná rubrika a ostatní pořady. Přepínač rozšíří seznam na všechny tehdejší spolupracovníky. |
+| Přehled ČRo | Všechny celoplošné i regionální stanice, ekonomická a kulturní osa za posledních 30 dnů. Pod tabulkou dvouletý trend za vybranou stanici nebo celý ČRo. |
+| Stanice a pořad | Odvysílané minuty, premiéry a reprízy, počet původních dílů, unikátní osoby, podíl pěti nejčastěji slyšených osob na minutách a rozložení obou os. Výchozí okno pořadu 90 dní. |
+| Osoba a redaktor | Role, pořady, doložené vazby a díly. U moderátora zvlášť hosté jeho dílů a jeho vlastní komentáře. Osobní hodnocení se zobrazuje podle publikačních pravidel níže. |
+| Instituce | Zastoupené minuty a díly podle lidí a pořadů. Pravidelný pořad a hostování jinde lze porovnat. Samostatný filtr ukáže osoby s doloženou profesní vazbou. |
 
-Filtry pro období a role se zachovají při prokliku. Karta hodnocení i jednotlivé vystoupení mají vlastní odkaz a tlačítko **Navrhnout opravu**.
+Proklik z bodu grafu zachová čas, role, žánr, stanici a způsob výpočtu. Detail ukáže zdroj, délku, přidělené minuty a podklad pro zařazení. Výchozí **externí hlasy** zahrnují hosty, komentátory i pravidelné externí spoluprůvodce. Další pohled přidá interní vystupující. Počet pouhých moderací a autorství webových článků je dostupný zvlášť. U politiků lze oddělit vládu, opozici a ostatní k datu vzniku dílu. Události v grafu (volby, nástup vlády) mají datum a zdroj.
 
-## 2. Co se počítá
+**Rozsah vydání:** všechny stanice, pořady a dva roky. Začne se ověřením importu ve dvou týdnech napříč stanicemi. I stanice s nedostatečnými metadaty bude ve veřejném katalogu s uvedeným pokrytím. [Pravidla indexu a kontrolní příklady](METHODOLOGY.md) · [Zdroje a plán ověření](SOURCES.md)
 
-- **Jeden člověk × jeden původní díl = jeden hlas.** Tři hosté znamenají tři hlasy. Stejný spoluprůvodce ve třiceti dílech má třicet hlasů. Repríza pouze přidá záznam o odvysílání. Společná premiéra dvou stanic patří jednou každé stanici a jednou celému ČRo. Datum hlasu určuje premiéra, včetně premiér před začátkem sledovaného období.
-- **Role.** Výchozí výběr zahrnuje hosty, interní experty, komentátory a pravidelné spoluprůvodce. Moderátory a redaktory lze zahrnout přepínačem. Při více vybraných rolích se dvojice člověk–díl započítá jednou. Podpis webového článku evidujeme jako autorství. Do ukazatele vstupuje až doložená vysílací role.
-- **Osy.** Ekonomická jde od nízkých daní, menšího státu a přerozdělování (−) k vyšším daním, většímu státu a přerozdělování (+). Kulturní od konzervativní (−) k progresivní (+). Stupnice −2, −1, 0, +1, +2. Znaménko určuje směr, 1 dílčí či mírnou preferenci, 2 výraznou a soustavně doloženou preferenci. Nula vyžaduje doloženou středovou či smíšenou pozici. Nedostatek důkazů má hodnotu `NULL` pro každou osu zvlášť.
-- **Přiřazení.** Pro doložené vystoupení jménem instituce použij její hodnocení platné v den premiéry. V ostatních případech použij veřejně doložený profil osoby. Pouhé zaměstnání zakládá vazbu na instituci. Každé publikované hodnocení schvaluje editor podle verzované metodiky a dokládá konkrétním veřejným stanoviskem, programem či návrhem. U sporných os může ponechat nezařazeno.
-- **Výpočet.** Pro osu a vybraný soubor vystoupení je index `Σ skóre / K`, kde `K` je počet zařazených a `N` počet všech doložených vystoupení ve výběru. Zobraz průměr, četnosti všech pěti stupňů a `K/N`. Při `K = 0` zobraz „bez dat“. Souhrn ČRo počítej z vystoupení po odstranění duplicit. Chybějící obsazení dílů vykazuj zvlášť, protože počet chybějících osob neznáme.
-- **Čas.** Každý den grafu končí posledním dnem svého 30denního okna v pásmu `Europe/Prague`. Titulní hodnoty a pravý okraj grafu používají stejný poslední uzavřený den a verzi dat. Import načte i 29 dní před začátkem grafu.
+## Architektura
 
-## 3. Architektura a uložení
-
-| Součást | Implementace a odpovědnost |
+| Součást | Rozhodnutí |
 |---|---|
-| Import | Python CLI, HTTP klient a parser HTML. První import na notebooku, další denně přes `systemd.timer` na Raspberry Pi nebo jiném Linuxu. |
-| Hlavní databáze | Soubor SQLite na trvalém disku, jeden zapisující proces, transakce, cizí klíče a SQL migrace v Gitu. Editor používá místní CLI. |
-| Publikace | Python sestaví agregace a seznamy dílů. Astro + TypeScript vydá statický web a JSON dělený podle entity a období přes Cloudflare Workers Static Assets. Běžné čtení obslouží CDN. |
-| Podněty | Cloudflare Worker přijímá formulář do D1. D1 uchovává frontu podnětů, hlavní SQLite schválené změny. Přístup editora je autentizovaný. |
-| Obnova a cena | Denní konzistentní záloha přes SQLite Backup API do neveřejného R2 Standard. Hosting může při využití bezplatných kvót stát 0 Kč měsíčně. Vlastní doména, elektřina a redakční práce jsou samostatné náklady. [Static Assets](https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/) · [D1](https://developers.cloudflare.com/d1/platform/pricing/) · [R2](https://developers.cloudflare.com/r2/pricing/) |
+| Sběr a redakce | Python CLI. Hromadný import na notebooku, denní přírůstky přes `systemd.timer` na Linuxu. Pravidla podle formátu pořadu, fronta nejasných případů, schválení editorem. |
+| Hlavní úložiště | SQLite na SSD, cizí klíče, WAL, `busy_timeout`, krátké zapisovací transakce. Import a editor mohou pracovat souběžně. Zdroje a schválené opravy jsou oddělené vrstvy. |
+| Web a distribuce | Astro + TypeScript na Cloudflare Workers Static Assets. Python předpočítá titulní přehled. U vlastních filtrů prohlížeč čte měsíční balíčky po stanicích, sjednotí role podle ID osoby v úseku a sečte váhy. Stejná sada příkladů ověří oba výpočty. |
+| Vydání dat | Balíčky v neveřejném R2. Worker vydává jen data aktuální revize podle jediného ukazatele v D1. Při změně revize během načítání klient zahodí rozpracovaný výpočet a obnoví výběr. Jmenná data a skóre mají `Cache-Control: no-store`; do statických assetů patří pouze rozhraní. |
+| Cena | Cíl 0 Kč za hosting při využití bezplatných kvót. Dynamické dotazy na data spotřebovávají kvóty Workeru, D1 a R2. Soubory se sdružují po měsících, katalog po blocích. Build hlídá velikost i počet assetů. [Limity Workers](https://developers.cloudflare.com/workers/platform/limits/) · [D1](https://developers.cloudflare.com/d1/platform/pricing/) · [R2](https://developers.cloudflare.com/r2/pricing/) |
 
-**Minimální datový model**
+## Datový model
 
-| Entity | Klíče a význam |
+| Entity | Klíče a obsah |
 |---|---|
-| `station`, `show`, `episode`, `broadcast` | Díl má pořad, původní datum a stabilní ID. Odvysílání má stanici, čas a typ premiéra / repríza / neurčeno. Unikátní dvojice stanice–začátek. |
-| `person`, `organization`, `affiliation` | Stabilní ID, aliasy a časová platnost vazeb osoby k institucím. |
-| `appearance`, `appearance_role`, `article_credit` | Unikátní dvojice díl–osoba, její vysílací role, případná zastupovaná instituce a zdroj. Podpis článku má vlastní záznam. |
-| `assessment`, `evidence` | Osoba nebo instituce, osa, hodnota, zdůvodnění, zdrojová URL, interval platnosti, datum schválení a revize. U stejného subjektu a osy se schválené intervaly jedné revize nepřekrývají. |
-| `import_run`, `correction`, `release` | Pokrytí podle data a stanice, původ změn, rozhodnutí editora a identifikátor vydané verze dat a metodiky. |
+| `station, show, episode, broadcast, segment` | Žánr pořadu, identita obsahu a premiéra. Odvysílání je konkrétní výskyt na stanici (unikátní stanice + začátek), s koncem, původem délky a typem premiéra / repríza / neurčeno. Nepřekrývající se úseky připojují skutečnou odvysílanou verzi k obsahu. |
+| `person, organization, affiliation, capacity` | Stabilní ID, potvrzené aliasy, instituce/strana, druh osoby, funkce, vláda/opozice a jejich intervaly platnosti. U vystoupení uchovej tehdejší roli, redakční vztah (interní/externí) a výslovné zastoupení. |
+| `appearance, segment_person, article_credit` | Unikátní díl–osoba pro počty původních dílů. Úsek–osoba nese množinu rolí a způsob přidělení času. Samostatná vazba autor–článek. |
+| `source_snapshot, proposal, override` | URL, čas a hash soukromého snímku. Návrh extrakce nebo hodnocení má cíl, původce, verzi pravidla, doklad ve zdroji, jistotu a rozhodnutí. Ruční oprava překrývá výsledek parseru a přežije nový import. |
+| `assessment, evidence, publication_rule` | Subjekt, osa, stav, hodnota, jistota, zdroje, editor, revize a časová platnost. Platné schválené intervaly pro subjekt a osu se nepřekrývají. Publikační oprávnění je zvlášť od hodnocení. |
+| `import_run, correction, release` | Pokrytí podle stanice/dne/žánru, rozhodnutí k podnětům a konzistentní vydání se zdrojovou i metodickou revizí. D1 uchovává frontu a aktivní vydání, hlavní SQLite schválený stav. |
 
-## 4. Import, vydání a opravy
+## Opravy, soukromí a provoz
 
-1. **Import rozsahu.** `import --from YYYY-MM-DD --to YYYY-MM-DD [--station ID]` projde oba krajní dny, ve výchozím režimu všechny stanice. Soupis odvysílání vychází z [programu ČRo](https://program.rozhlas.cz/program/html), metadata dílů ze [stránkovaného API mujRozhlas](https://api.mujrozhlas.cz/episodes) a stránek epizod.
-2. **Extrakce.** Z programu a anotace čti výslovně uvedené hosty, moderátory a komentátory. Detail dílu doplní role, instituci a podpis článku. Ulož URL, krátký doklad, čas načtení a verzi parseru. Jména spojuj přes zdrojové ID, profil nebo potvrzený alias. Shodná jména, nejasné reprízy a role jdou ke kontrole. Plošný přepis audia není součástí importu.
-3. **Opakovatelnost a pokrytí.** Ukládej postup po stanici a dni, změněná metadata aktualizuj podle stabilních klíčů, zachovej ruční opravy. Denně znovu načti posledních sedm dní kvůli opožděným úpravám. Rozliš chybějící program, nedohledaný díl a díl s úplným, částečným, neznámým nebo doloženě prázdným obsazením.
-4. **Podnět.** `POST /api/corrections` přijme ID cíle a revize, navrženou změnu, důvod a volitelný zdroj. Worker ověří vstup a omezí frekvenci podání. Editor rozhodne přijmout / zamítnout s odůvodněním. Přijatou změnu zapíše hlavní DB jednou pod ID podnětu, teprve poté se uzavře záznam v D1. Oprava omylu přepočítá dotčenou historii, změna postoje platí od doloženého data.
-5. **Vydání.** Z jednoho konzistentního snímku vytvoř grafy i detaily, ověř počty a odkazy a publikuj je jako jednu verzi. Při selhání zůstane dostupná předchozí verze s datem aktualizace. Zveřejňuj schválené změny a jejich důvody, surová podání zůstávají neveřejná.
-
-## 5. Ověření před spuštěním
-
-- **Pokrytí zdrojů.** Na jednom týdnu ze začátku období a jednom současném týdnu ověř všechny stanice. Ručně porovnej vzorek jmen a rolí s díly. Zveřejni pokrytí po stanicích a zjištěné chyby. Úplnost dvouletého archivu je zatím otevřená.
-- **Kontrolní výpočet.** Společná premiéra stanic A a B má hosty +2 a −1 a moderátora bez skóre. V základním pohledu mají obě stanice i celý ČRo index +0,5 a pokrytí 2/2. Po přidání moderátora je pokrytí 2/3. Repríza ani opakovaný import tyto výsledky nezmění.
-- **Publikační kontrola.** Číslo v grafu musí jít reprodukovat ze zobrazených dílů. Vyzkoušej zpětnou opravu, změnu postoje od data a obnovu ze zálohy. Před publikací osobních politických profilů vyjasni podmínky zpracování těchto údajů. [GDPR, čl. 9 a 85](https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32016R0679)
+- **Podnět:** formulář u osoby, instituce či dílu odešle ID cíle, revizi, změnu, důvod a volitelný zdroj. Worker ověří vstup a token Turnstile, omezí četnost a velikost. Přijaté rozhodnutí editor uloží transakčně pod unikátním ID, pak potvrdí podnět v D1. Veřejný je výsledek a redakční odůvodnění. Surová podání zůstávají neveřejná. Provozní návrh: smazat text a případný kontakt 90 dní po uzavření, ponechat ID, rozhodnutí a minimální auditní stopu.
+- **Publikační úrovně:** u institucí a stran lze vydat zdůvodněná hodnocení. U veřejných politických představitelů vyžaduje jmenné hodnocení individuální redakční a právní posouzení. U ostatních osob včetně zaměstnanců ČRo publikuje první verze doložené role, četnost, čas a výslovně zastupovanou instituci. Soukromé politické skóre se pro ně nevytváří ani nepřenáší klientovi. Skóre instituce je tak označeno i u konkrétního vystoupení. Před spuštěním dokumentovat oprávnění a dobu uchování pro každou třídu údajů. [GDPR, čl. 6, 9 a 85](https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32016R0679)
+- **Stažení:** editor označí dotčený údaj jako neveřejný. U naléhavé žádosti Worker do přepočtu dočasně zablokuje dotčené datové balíčky a závislé souhrny. Nové vydání odstraní údaj z karet, vyhledávání, řádků, agregací a veřejné historie. Staré datové verze ani náhledy nesmějí obejít Worker. Otestovat i přímou starou URL. Neveřejný seznam stažení se znovu aplikuje před vydáním z obnovené zálohy.
+- **Vydání a obnova:** nahraj kompletní data, ověř počty, odkazy a srovnání klientského a referenčního výpočtu, teprve pak přepni revizi. Při neúspěchu zůstává předchozí vydání s datem aktualizace, s výjimkou zablokovaných údajů. Denní záloha SQLite přes Backup API do neveřejného R2, pravidelná zkouška obnovy včetně překryvů a stažení.
+- **Podmínky vydání:** naměřené pokrytí ze zdrojového pilotu, testy parseru na uložených vzorcích, reprodukovatelný index z detailu, úspěšný test reprízy, opravy a stažení. První SQL migrace vznikne proti ověřeným identifikátorům z pilotu. Licence kódu a práva k dalšímu šíření jednotlivých zdrojů jsou samostatná rozhodnutí před veřejným vydáním.
