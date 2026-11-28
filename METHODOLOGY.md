@@ -2,7 +2,7 @@
 
 ## Jak číst index stanice
 
-Index je průměrné skóre hostů vážené jejich vysílacím časem. Počítáme ho zvlášť pro každou stanici, období a osu. Příklad pro ekonomickou osu za 30 dní:
+Index ukazuje, kolik prostoru dostali hosté s různými postoji. Každá minuta rozhovoru má stejnou váhu. Z minut se známým skóre spočítáme průměr pro danou stanici, období a osu. Příklad pro ekonomickou osu za 30 dní ukazuje čtyři hosty.
 
 | Host | Čas | Výsledek hodnocení |
 |---|---:|---|
@@ -18,7 +18,7 @@ Index je průměrné skóre hostů vážené jejich vysílacím časem. Počít�
 
 Vedle průměru zobrazíme minuty v každém stupni škály, důvody nezařazení a podíl odhadnutého času. Rozhovor, u kterého neznáme hosta nebo délku, mezi těmi 100 minutami vůbec není. Zvlášť proto uvedeme, kolik programu jsme dohledali a u kolika dílů známe obsazení.
 
-**Kdy ukázat číslo.** Navržené minimum pro zvolenou osu jsou tři různé osoby se známým skóre, 10 různých zařazených dvojic osoba–původní díl a alespoň 60 % zařazené váhy (minut nebo vystoupení podle zvoleného pohledu). Repríza další dvojici nevytváří. Malý příklad výše vysvětluje výpočet. Na webu by se u něj zobrazily jen minuty, počty a důvod chybějícího indexu. Hranice ověříme na skutečných datech.
+**Kdy index zveřejníme?** Navrhujeme tři podmínky. Skóre na dané ose známe alespoň u tří různých hostů. Tito hosté mají dohromady alespoň deset vystoupení (dva hosté v jednom dílu jsou dvě vystoupení, repríza žádné další nepřidá). Skóre pokrývá alespoň 60 % minut připsaných hostům, při výpočtu podle počtu dílů alespoň 60 % vystoupení. V příkladu mají skóre jen dva hosté, takže web ukáže minuty, počty a důvod, proč index chybí. Hranice ověříme na skutečných datech.
 
 **Jak moc záleží na chybějících skóre?** V příkladu by při skóre −2 u C i D vyšel index 0. Při +2 u obou by vyšel +0,8. Tak zobrazíme možné rozpětí. Čas výslovně označený „osa se netýká“ do tohoto odhadu nevstupuje.
 
@@ -32,7 +32,7 @@ Vedle průměru zobrazíme minuty v každém stupni škály, důvody nezařazen�
 
 ## Jak vznikne názorový profil
 
-Osoba a instituce mají samostatné karty. Každá karta má dvě hodnocení:
+Profil shrnuje veřejně doložené postoje osoby nebo instituce. Na její kartě čtenář uvidí zvlášť ekonomické a kulturní skóre a u každého doklad, ze kterého vychází.
 
 | Skóre | Ekonomická osa | Kulturní osa |
 |---|---|---|
@@ -42,7 +42,7 @@ Osoba a instituce mají samostatné karty. Každá karta má dvě hodnocení:
 | +1 | Dílčí zvýšení celkového zdanění nebo přerozdělování | Rozšíření práv či osobní volby v konkrétní oblasti |
 | +2 | Výrazné zvýšení celkového zdanění a přerozdělování | Široké rozšíření osobní volby a rovných práv napříč oblastmi |
 
-Nejdřív hodnotíme profily s nejvíce vysílacími minutami. U osoby vycházíme z jejích vlastních slov a veřejně podpořených návrhů. U instituce z oficiálních stanovisek a programů. Posoudíme i doklady, které navrženému skóre odporují. **Každé skóre musí mít důvod a přesnou citaci** s autorem, datem, odkazem a podle zdroje i stranou nebo časem v nahrávce.
+Editor začne u těch, kterým jsme připsali nejvíc dosud neohodnocených minut na dané ose. O výši skóre rozhodují doložené postoje. U osoby vycházíme z jejích vlastních slov a veřejně podpořených návrhů. U instituce z oficiálních stanovisek a programů. Posoudíme i doklady, které navrženému skóre odporují. **Každé skóre musí mít důvod a přesnou citaci** s autorem, datem, odkazem a podle zdroje i stranou nebo časem v nahrávce.
 
 Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, sporné podklady nebo osa se netýká. Nulu použijeme jen pro doložený střed či smíšený postoj. U hodnocení evidujeme míru jistoty. U změny zaznamenáme původní hodnotu, kdo změnu schválil, proč a odkdy platí.
 
@@ -55,8 +55,8 @@ U stran lze využít [expertní průzkum CHES](https://www.chesdata.eu/ches-euro
 
 ### Čí skóre použít u hosta
 
-**Host zastupuje instituci:** použijeme její skóre, i kdyby měl jiné osobní skóre. Stačí, že ho pořad představí například jako „ekonoma PAQ Research“. Uložíme odkaz na toto představení. Údaj o zaměstnavateli nalezený jen v životopisu zastupování nedokládá.
+Host může mít na ekonomické ose třeba −1 a jeho instituce +1. **Když ji zastupuje, rozhovoru připíšeme +1. Když mluví za sebe, připíšeme −1.** Na osobní kartě mu v obou případech zůstává −1.
 
-**Host mluví za sebe:** použijeme jeho vlastní schválené skóre. Pokud výslovně uvede, že mluví za sebe, má to přednost před představením jeho zaměstnavatele.
+Roli určíme z konkrétního dílu a uložíme odkaz. Když pořad hosta představí jako ekonoma dané instituce, počítáme ho jako jejího zástupce. Pokud host výslovně řekne, že mluví za sebe, platí jeho osobní skóre. Samotný údaj o zaměstnavateli v životopisu k přiřazení instituce nestačí.
 
 **Chybí skóre nebo je role nejasná:** minuty vykážeme jako nezařazené pro příslušnou osu. Například 20 minut zástupce instituce s ekonomickým skóre +1 a nehodnocenou kulturou znamená 20 minut s +1 v ekonomice a 20 nezařazených minut v kultuře.
