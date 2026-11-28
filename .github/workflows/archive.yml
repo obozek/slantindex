@@ -1,0 +1,38 @@
+name: Recover schedule archive
+on:
+  workflow_dispatch:
+    inputs:
+      first:
+        description: First Prague date to import
+        required: true
+      last:
+        description: Last Prague date to import
+        required: true
+  push:
+    branches: ['archive-run/**']
+permissions:
+  contents: read
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import requested months
+        env:
+          FIRST: ${{ inputs.first }}
+          LAST: ${{ inputs.last }}
+        run: |
+          if [[ -z "$FIRST" ]]; then
+            range=${GITHUB_REF_NAME#archive-run/}
+            FIRST=${range%_*}
+            LAST=${range#*_}
+          fi
+          python3 -m slantindex.history --from "$FIRST" --to "$LAST" --out build/months
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-archive
+          path: |
+            build/months/
+            build/slantindex.sqlite

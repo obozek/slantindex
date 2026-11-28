@@ -1,0 +1,77 @@
+---
+import data from "../generated/schedule.json";
+
+const available = data.days.filter(day => day.available);
+const synthetic = available.some(day => day.source?.startsWith("fixture:"));
+const slots = available.reduce((count, day) => count + day.slots, 0);
+const repeats = available.reduce((count, day) => count + day.repeatSlots, 0);
+const dateLabel = (day: string) => new Intl.DateTimeFormat("en-GB", {
+  day: "numeric", month: "short", year: "numeric", timeZone: "UTC"
+}).format(new Date(day + "T00:00:00Z"));
+const percent = (covered: number, total: number) => (100 * covered / total).toFixed(1);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ČRo Plus schedule coverage · SlantIndex</title>
+  </head>
+  <body>
+    <header><span class="brand">SlantIndex</span><span>ČRo Plus</span></header>
+    <main>
+      <h1>Schedule coverage</h1>
+      <p class="period">{dateLabel(data.from)} – {dateLabel(data.to)} · Europe/Prague</p>
+      {synthetic && <p class="notice">Sample archive · Synthetic schedule data</p>}
+      <dl>
+        <div><dt>Days recovered</dt><dd>{available.length}<small> / {data.days.length}</small></dd></div>
+        <div><dt>Scheduled broadcasts</dt><dd>{available.length ? slots : "—"}</dd></div>
+        <div><dt>Marked as repeats</dt><dd>{available.length ? repeats : "—"}</dd></div>
+      </dl>
+      <h2>Daily archive</h2>
+      <p>Coverage measures the share of the day represented in the schedule. Overlapping slots count once.</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Date</th><th>Coverage</th><th>Broadcasts</th><th>Repeats</th><th>Source</th></tr></thead>
+          <tbody>{data.days.map(day => <tr>
+            <th scope="row"><time datetime={day.date}>{dateLabel(day.date)}</time></th>
+            <td>{day.available ? <div class="coverage"><meter min="0" max={day.secondsInDay} value={day.coveredSeconds} aria-label="Schedule coverage"></meter>{percent(day.coveredSeconds, day.secondsInDay)}%</div> : <span class="missing">Missing day</span>}</td>
+            <td>{day.available ? day.slots : "—"}</td>
+            <td>{day.available ? day.repeatSlots : "—"}</td>
+            <td>{day.source?.startsWith("https://") ? <a href={day.source}>Schedule</a> : day.available ? "Fixture" : "—"}</td>
+          </tr>)}</tbody>
+        </table>
+      </div>
+      <footer><a href="./schedule.json">Download daily counts (JSON)</a></footer>
+    </main>
+  </body>
+</html>
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(body) { margin: 0; color: #172c31; background: #fcfbf7; font: 1rem/1.5 "Source Sans 3", system-ui, sans-serif; }
+  header, main { max-width: 64rem; margin: auto; padding-inline: clamp(1rem, 5vw, 3rem); }
+  header { display: flex; gap: 1.2rem; align-items: baseline; padding-block: 1.3rem; border-bottom: 1px solid #bac8c4; }
+  .brand { font-weight: 750; font-size: 1.15rem; }
+  main { padding-block: clamp(2rem, 6vw, 4.5rem); }
+  h1, h2, dd { font-family: "Spectral", Georgia, serif; font-weight: 500; }
+  h1 { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: -.045em; line-height: 1.05; }
+  h1, h2, p { margin: 0 0 .65rem; }
+  h2 { font-size: 1.95rem; letter-spacing: -.025em; }
+  .period, p, dt { color: #475d60; }
+  .notice { display: inline-block; margin-top: .7rem; padding: .25rem .6rem; background: #ede8d8; color: #594a2b; }
+  dl { display: flex; flex-wrap: wrap; gap: 1.2rem 3.8rem; margin: 2rem 0 2.5rem; padding: 1.25rem 0; border-block: 1px solid #bac8c4; }
+  dt { font-size: .9rem; }
+  dd { margin: .1rem 0 0; font-size: 2.4rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+  small { font: 1.1rem system-ui, sans-serif; color: #475d60; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; text-align: left; font-variant-numeric: tabular-nums; margin-top: 1rem; }
+  th, td { padding: .75rem .8rem .75rem 0; border-bottom: 1px solid #d9dfdb; white-space: nowrap; }
+  thead { color: #475d60; font-size: .85rem; }
+  tbody th { font-weight: 500; }
+  .coverage { display: flex; align-items: center; gap: .55rem; }
+  meter { width: 4rem; accent-color: #28665c; }
+  .missing { color: #685842; }
+  a { color: #1a6659; text-underline-offset: .2em; }
+  footer { margin-top: 1.4rem; }
+  @media (max-width: 42rem) { meter { display: none; } }
+</style>

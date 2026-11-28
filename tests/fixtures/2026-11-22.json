@@ -1,0 +1,7 @@
+{
+  "data": [
+    {"station":"plus","id":11,"title":"Morning bulletin","since":"2026-11-22T08:00:00+01:00","till":"2026-11-22T08:10:00+01:00","repetition":false,"type":{"code":"ZPR"},"edition":[],"persons":[]},
+    {"station":"plus","id":12,"title":"Weekend interview","since":"2026-11-22T08:07:00+01:00","till":"2026-11-22T08:30:00+01:00","repetition":false,"type":{"code":"PUB"},"edition":{"id":42},"persons":[]},
+    {"station":"plus","id":13,"title":"Weekend interview","since":"2026-11-22T23:45:00+01:00","till":"2026-11-23T00:05:00+01:00","repetition":true,"type":{"code":"PUB"},"edition":{"id":42},"persons":[]}
+  ]
+}
