@@ -47,11 +47,12 @@ Editor začne u těch, kterým jsme připsali nejvíc dosud neohodnocených minu
 
 Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, sporné podklady nebo osa se netýká. Nulu použijeme jen pro doložený střed či smíšený postoj. U hodnocení evidujeme míru jistoty.
 
-### Co když člověk změní názor nebo přejde jinam?
+### Kdy přepočítáme minulost?
 
-- **Změna postoje.** Editor u dotčené osy přidá nové skóre s citací a datem, od kterého ho doklad podporuje. Původní skóre zachováme pro starší díly. Datum schválení a jméno editora evidujeme zvlášť. Stejně postupujeme při změně postoje instituce.
-- **Přestup.** V březnu host zastupoval think tank A (+1), v říjnu už zastupuje B (−1). Březnovému rozhovoru připíšeme +1 i při listopadové repríze. Říjnovému připíšeme −1. Samotný přestup osobní skóre hosta nemění.
-- **Oprava chyby.** Zjistíme-li, že jsme už v březnu přiřadili nesprávné skóre nebo instituci, opravíme i tehdejší výsledek a jeho reprízy. U opravy uvedeme důvod a zdroj.
+1. **Změnil se postoj nebo zastupovaná instituce.** Když host v říjnu změní postoj, nové skóre platí od doložené změny. Když přejde z think tanku A do B, u každého dílu použijeme instituci, kterou v něm zastupoval. Listopadová repríza březnového rozhovoru stále patří k A. Přestup sám o sobě osobní skóre nemění.
+2. **Zpřesnili jsme hodnocení dřívějšího postoje.** V listopadu najdeme podklad, který dokládá osobní ekonomické skóre +2 už od března. Dosud jsme pro toto období uváděli +1. Opravíme všechny výsledky za doložené období, ve kterých se má použít jeho osobní skóre, včetně repríz. Graf ukáže přepočtené hodnoty. Původní +1 zůstane v historii hodnocení.
+
+U každé revize osoby i instituce uložíme osu, původní a nové skóre, období platnosti, důvod s citací a kdo revizi kdy schválil. V příkladu je březen začátkem platnosti a listopad datem revize.
 
 **Dva příklady zařazení podle konkrétního dokladu:**
 
