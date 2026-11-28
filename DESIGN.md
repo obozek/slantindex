@@ -1,23 +1,16 @@
 # SlantIndex
 
-Kdo dostává prostor na ČRo Plus a jak se složení hostů mění v čase? Hlavní stránka ukáže ekonomickou a kulturní osu stanice za posledních 30 dní a pod nimi vývoj za dva roky. Z grafu lze přejít na pořad, osobu či instituci a dohledat díly a podklady pro její zařazení.
+SlantIndex ukáže, kdo dostává prostor na ČRo Plus a jaké veřejně doložené postoje tito lidé nebo zastupované instituce prosazují. Čtenář uvidí ekonomické a kulturní skóre stanice za posledních 30 dní, dvouletý trend a díly, ze kterých výsledek vychází.
 
-## Tři části aplikace
+## Co dodáme postupně
 
-| Část | Úloha |
-|---|---|
-| Import v Pythonu | Pro zadané období projde všechny pořady ČRo Plus a jejich dostupné stránky dílů. Uloží časy vysílání, reprízy, osoby, jejich role a odkaz na zdroj. |
-| SQLite | Uchová pořady, díly, jednotlivá odvysílání, osoby, instituce a doložená hodnocení na obou osách. Každé odvysílání má `station_id`. |
-| Web v Astro na Cloudflare | Zobrazí přehledy vypočtené ze SQLite, pokrytí dat a odkazy na originály. U chyby půjde navrhnout opravu ke schválení. |
+1. **Kdo vystoupil.** Projdeme všechny pořady ČRo Plus za posledních 30 dní. Web ukáže osoby, role, počty dílů a odkazy na originály. U dílu s neznámým obsazením to uvede.
+2. **Kolik prostoru dostal.** Přidáme odvysílané minuty včetně repríz. Hodinový rozhovor odvysílaný dvakrát dá hostovi 120 minut a jeden původní díl.
+3. **Jaké postoje dostávají prostor.** Přidáme karty osob a institucí se skóre, důvodem a citacemi. U hosta zastupujícího instituci platí její skóre. U hosta mluvícího za sebe platí jeho vlastní. Čtenář může navrhnout opravu. [Jak skóre počítáme](METHODOLOGY.md)
+4. **Jak se výběr mění.** Historii doplníme po měsících až na dva roky. Graf půjde rozkliknout podle pořadu, redaktora, osoby a instituce.
 
-## Co je názorový profil
+## Jak web funguje
 
-Osoba i instituce mají vlastní kartu. Karta odpovídá na dvě otázky: **Jaké ekonomické postoje veřejně prosazuje? Jaké kulturní postoje veřejně prosazuje?** Na každou odpovídá zvlášť hodnotou od −2 do +2, jednou větou zdůvodnění a krátkou citací s odkazem na originál. Kde podklady chybějí, zobrazuje se „nezařazeno“. Člověka hodnotíme podle jeho vlastních výroků a návrhů. Organizaci podle jejích oficiálních stanovisek, programů a doporučení. [Stupnice a příklady citací](METHODOLOGY.md#jak-vznikne-názorový-profil)
+Python načte program a stránky dílů. SQLite uloží díly, jejich odvysílání, účastníky, role a hodnocení se zdroji. Astro zveřejní přehledy na Cloudflare. Každé odvysílání má `station_id`, takže další rádio může používat stejný výpočet i web. [Jak získáme a ověříme data](SOURCES.md)
 
-**Čí skóre se započítá?** Když host vystupuje za instituci, použijeme její skóre. Když vystupuje sám za sebe, použijeme jeho osobní skóre. Pokud zvolený profil nemá hodnocení na konkrétní ose, minuty na této ose označíme jako nezařazené.
-
-**Výpočet.** Čas se počítá pro každou stanici zvlášť. Hodinový rozhovor s jedním hostem a jeho úplná repríza znamenají 120 minut a jeden původní díl. U více hostů se použijí známé úseky nebo označený odhad. U indexu je vždy vidět, jaká část času má doložené zařazení. [Metodika](METHODOLOGY.md)
-
-**První použitelná verze.** Za posledních 30 dní projít celý program ČRo Plus a zobrazit, kdo vystoupil, kolikrát a v kterých dílech. Kde hosta nelze z dostupných údajů určit, označit chybějící údaj. Dalšími přírůstky jsou minuty, hodnocení a delší historie. Osobní politické profily vyžadují posouzení podkladů a oprávnění ke zveřejnění. Stažení hodnocení se musí promítnout i do publikovaných dat a grafů.
-
-**Další rádia.** Specifika webu ČRo patří do importu. Až přidáme jinou stanici, její import uloží údaje ve stejném tvaru. Výpočet i web už vybírají data podle `station_id`. [Zdroje](SOURCES.md)
+Před zveřejněním politického profilu konkrétní osoby posoudíme podklady a oprávnění ke zveřejnění. Stažené hodnocení odstraníme i z veřejných dat a přepočítáme grafy.
