@@ -42,17 +42,13 @@ Názorový profil shrnuje veřejně zastávané postoje jedné osoby nebo jedné
 
 Nejdřív zpracuj dosud nehodnocené profily s největším vysílacím časem. Čas určuje jejich váhu v přehledu stanice. **Skóre profilu určují pouze doložené postoje.** Pro výpočet pokrytí uchovej stav každé osy: `nehodnoceno / nedostatek důkazů / sporné / netýká se / zařazeno`. Číselnou hodnotu má pouze stav „zařazeno“.
 
-### Čí profil použít při vystoupení
+### Čí skóre použít u hosta
 
-Osobní profil a profil instituce zůstávají oddělené. Při výpočtu výsledku stanice záleží na tom, v jaké roli člověk v daném dílu vystupoval.
+1. **Host vystupuje za instituci.** Použij pro jeho minuty skóre této instituce, i když má host vlastní skóre. Jako podklad stačí, že ho pořad pro tento rozhovor představí v institucionální roli, například „ekonom PAQ Research“. K vystoupení ulož název instituce a odkaz na doklad. Zaměstnavatel nalezený pouze v životopise k tomu nestačí.
+2. **Host vystupuje sám za sebe.** Použij jeho schválené osobní skóre, pokud ho máme. Výslovné uvedení, že jde o osobní vystoupení, má přednost před zmínkou o zaměstnavateli.
+3. **Chybí hodnocení nebo není jasné, koho host zastupuje.** Na každé ose zvlášť označ minuty jako „nezařazené“. Zůstanou v celkovém vysílacím čase, do průměru této osy nevstoupí.
 
-| Vysílací role | Výchozí přiřazení po jednotlivých osách |
-|---|---|
-| Mluvčí nebo formální zástupce | Výslovně zastupovaná organizace, poté schválený a publikovatelný osobní profil. |
-| Politik ve funkci | Při stranickém vystoupení strana. Při výkonu veřejné funkce schválený osobní profil, případně doložená tehdejší strana **jako označená náhradní hodnota**. Nominace bez členství nestačí. Nestraník bez hodnocení zůstane v počtech a minutách. |
-| Výzkumník, analytik, komentátor | Schválený publikovatelný osobní profil, případně výslovně zastupovaná instituce s hodnocením. Pouhé pracoviště je pouze profesní vazba. Pokud publikace osobního profilu není povolena, tato větev se přeskočí. |
-
-Přepínač **bez náhradních hodnot** vyloučí výplň chybějícího skóre institucí či stranou; jmenovatel všech přidělených minut se nezmění. V porovnání **osoba / instituce** lze nad stejnou množinou samostatně zobrazit obě čisté varianty včetně jejich pokrytí. Chybějící hodnota nepřejímá znaménko druhé osy. Doložený spor nelze skrýt automatickým přechodem na náhradní zdroj.
+**Příklad.** Ekonom vystoupí za PAQ Research na 20 minut. Pokud má PAQ ekonomické skóre +1 a kulturní osu nehodnocenou, započítá se 20 minut se skóre +1 na ekonomické ose a 20 nezařazených minut na kulturní ose. Na kartě dílu je uvedeno „použité skóre: PAQ Research“. Osobní profil ekonoma zůstává beze změny.
 
 Pro kalibraci politických stran lze použít [CHES Europe](https://www.chesdata.eu/ches-europe/). Proměnné LRECON (0 levice, 10 pravice) a GALTAN (0 libertariánská, 10 tradiční) mají opačnou orientaci vůči našim osám. Návrh převodu pro obě: `z = 2 − 0,4 × x`, zaokrouhlení na celé číslo, přesnou polovinu od nuly. Test `0 → +2, 5 → 0, 10 → −2`. Zachovat ročník, původní hodnotu a zdroj. CHES hodnotí stranické vedení.
 
