@@ -1,0 +1,33 @@
+name: Verify static site
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: python -m unittest discover -s tests -v
+      - run: |
+          python -m slantindex import --fixtures tests/fixtures --from 2026-11-22 --to 2026-11-22
+          python -m slantindex export --from 2026-11-16 --to 2026-11-22 --out site/src/generated/schedule.json
+      - run: npm install --no-audit --no-fund && npm run build
+        working-directory: site
+      - run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          dist = Path("site/dist")
+          assert "Synthetic schedule data" in (dist / "index.html").read_text()
+          assert json.loads((dist / "schedule.json").read_text()) == json.loads(Path("site/src/generated/schedule.json").read_text())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: static-site
+          path: site/dist/
