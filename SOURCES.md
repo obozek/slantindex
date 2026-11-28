@@ -1,29 +1,25 @@
-# Zdroje a ověření importu
+# Jak zjistíme, kdo vystoupil
 
-## ČRo Plus
+| Odkud čerpáme | Co zjistíme |
+|---|---|
+| [Program ČRo](https://program.rozhlas.cz/program/html) | Co měla stanice daný den vysílat, v kolik a s kým. Program se může změnit. |
+| [Archiv mujRozhlas](https://api.mujrozhlas.cz/episodes) | ID pořadu a dílu, popis, čas a dostupnou nahrávku. Uvedení stanice u celého pořadu ještě nepotvrzuje odvysílání konkrétního dílu. |
+| Stránka dílu nebo nahrávka | Kdo vystoupil, v jaké roli, za kterou instituci a jak dlouho. Podpis pod článkem dokládá autorství textu. |
 
-| Zdroj | Co převzít | Omezení |
-|---|---|---|
-| [Program ČRo](https://program.rozhlas.cz/program/html) | Stanice, den, čas, název a anotace jednotlivých vysílání. | Plán může předcházet programové změně. Obecný několikahodinový blok nedokládá hosta po celou svou délku. Chybějící den je mezera v datech. |
-| [API mujRozhlas](https://api.mujrozhlas.cz/episodes) | Stránkované epizody, ID dílu a pořadu, popis, časy a dostupná metadata audia. | Pole `relationships.stations` může odkazovat na stanice pořadu. Každé konkrétní odvysílání musí doložit program či záznam. Stopáž archivní verze se může lišit od vysílání. |
-| Stránka dílu a případně záznam vysílání | Role, jména, instituce, údaj o repríze, skutečná délka nebo hranice úseku. | Podpis může označovat redaktora webu. Samotná shoda jména v titulku průkaznou účast nezakládá. |
+## Postup importu
 
-## Import a dohledatelnost
+1. **Projdi celý program stanice.** Příkaz `import --station cro-plus --from YYYY-MM-DD --to YYYY-MM-DD` zahrnuje oba krajní dny. Po každém dni ulož postup a případnou chybu. Opravám programu se přizpůsob opětovným načtením posledních sedmi dní. Starší období lze načíst znovu samostatně.
+2. **Najdi díl v archivu.** Spoj záznamy podle ID nebo odkazu. Pokud chybí, porovnej pořad, čas, délku a anotaci. Záznamy spoj jen při jednoznačné shodě. U reprízy hledej premiéru i před začátkem období. Označ sestřih, nejasnou shodu nebo neznámé datum prvního vysílání.
+3. **Zapiš jména, role a zdroj.** Pomohou údaje jako „hostem je“, „moderuje“ a „debatovali“. Nejasný případ zkontroluje člověk. U každého přiřazení uchovej odkaz a pasáž, ze které vychází.
+4. **Uchovej vstupy pro opravy.** Každou odlišnou odpověď zdroje ulož neveřejně s URL, časem, stavem HTTP, otiskem obsahu a verzí parseru. Při dalším stahování využij podmíněné požadavky, omez počet souběžných spojení a respektuj pokyn serveru `Retry-After`. Před hromadným stažením ověř podmínky užití. Na webu zveřejni zjištěná fakta, potřebné citace a odkazy.
+5. **Ověř úplnost podle stanice a žánru.** Kolik dní a minut programu máme? Kolik odvysílání jsme spojili s dílem? Kde známe obsazení a kde délku pouze odhadujeme? Dlouhé bloky průběžného vysílání vyhodnoť zvlášť. Parser testuj na uložených vstupech. Náhlý pokles úspěšnosti prověř před vydáním.
 
-1. Příkaz `import --station cro-plus --from YYYY-MM-DD --to YYYY-MM-DD` zahrnuje oba krajní dny; první implementace načítá ČRo Plus. Stav importu a chyby se evidují po stanici a dni. Výpadek jednoho zdroje neblokuje ostatní. Opakované načtení posledních sedmi dnů zachytí změny. Starší interval lze přehrát samostatně.
-2. Páruj přednostně přes ID epizody či kanonický odkaz. Náhradní vazbu podle pořadu, času, délky a anotace dovol jen při jediném přesvědčivém kandidátovi. Reprízy starších pořadů hledej i před importovaným obdobím. Sporné shody, odlišné sestřihy a neznámý počátek historie mají zvláštní stav.
-3. Každé různé tělo odpovědi ulož soukromě podle hashe spolu s URL, časem, HTTP stavem, verzí parseru a dostupnými hlavičkami pro podmíněné načtení. Souběh omez podle hostitele, respektuj pravidla zdroje, `Retry-After` a odklad opakovaných pokusů. Před hromadným importem ověř přístupové a užívací podmínky. Ve veřejném výstupu používej vlastní strukturovaná fakta, nezbytné doklady a odkazy.
-4. Parser čte strukturovaná pole a vzory typu „moderuje“, „hostem je“, „debatovali“. U volného textu vytvoří kandidáta pravidlo nebo editor. Volitelný jazykový model může návrh doplnit o výřez dokladu. Ukládej model/verzi, verzi pokynu, vstupní hash a jistotu. Návrh názorového profilu připraví editor z dohledaných primárních zdrojů (program, podepsaný text, přímý veřejný výrok); u stran lze importovat datovanou expertní studii. Případný model pouze předvyplní návrh. Nejasné extrakce a všechna hodnocení před publikací schvaluje editor. Pokyny a validační vzorek verzuj před zapnutím modelu. Z první verze nevzniká závislost na placeném API.
-5. Ověřuj import podle stanice **i žánru**. Počítej získané stanico-dny, pokryté sekundy vůči době dostupného programu, míru spárování dílů, úplnost obsazení a podíl času s doloženou/odhadnutou délkou. Proudové vysílání vykazuj zvlášť. Testy přehrávají uložené vstupy; náhlý pokles pokrytí proti poslednímu srovnatelnému období vyvolá kontrolu před vydáním.
+První verze může použít pravidla a ruční kontrolu. Pokud později zapojíme jazykový model, ke každému návrhu uchováme doklad, model, verzi zadání, otisk vstupu a jistotu. Před nasazením jej otestujeme na ručně ověřených případech. Názorová hodnocení schvaluje editor.
 
-## Ověřené případy a hranice pilotu
+## Co ověříme na skutečných dílech
 
-- *Pro a proti*, daň ze slazených nápojů. Stránka dokládá účast obou diskutujících a výslovně připomíná starší premiéru. Import získá hosty z úvodu a druhé vysílání připojí ke stejnému obsahu. [Díl na ČRo Plus](https://plus.rozhlas.cz/dan-ze-slazenych-napoju-snizi-obezitu-soudi-ekonom-napoje-za-nemuzou-mini-9324188)
-- *Život k nezaplacení*, 25. 11. 2026. V úvodu je Daniel Prokop uveden jako účastník, v podpisu jsou tři položky. Text dokládá účast, podpis autorství. U sdíleného pořadu je pro zahrnutí do Plusu potřeba doložit konkrétní vysílání v programu Plusu. [Díl na Radiožurnálu](https://radiozurnal.rozhlas.cz/danime-praci-ale-majetek-temer-vubec-cesko-je-v-tom-vyjimecne-rika-sociolog-9658893)
-- První import projde všechny pořady ČRo Plus ve stejném období. Na posledním uzavřeném týdnu a na týdnu ze začátku dvouleté historie ověř správnost přiřazení osob a délek. Výsledky uveď po žánrech spolu s počtem nedohledaných dílů. Dvoutýdenní kontrola zatím neproběhla.
+- **Hosté a reprízy.** Anotace debaty o slazených nápojích jmenuje oba hosty a uvádí, že premiéra proběhla dříve. Očekáváme dvě účasti ve stejném dílu a další odvysílání. [Pro a proti](https://plus.rozhlas.cz/dan-ze-slazenych-napoju-snizi-obezitu-soudi-ekonom-napoje-za-nemuzou-mini-9324188)
+- **Autor článku a host.** Úvod dílu z 25. 11. 2026 uvádí Daniela Prokopa, pod článkem jsou tři podpisy. Pro účast hosta použijeme úvod. Vysílání na Plusu ověříme v programu této stanice. [Život k nezaplacení](https://radiozurnal.rozhlas.cz/danime-praci-ale-majetek-temer-vubec-cesko-je-v-tom-vyjimecne-rika-sociolog-9658893)
+- **Kontrola archivu.** Porovnáme všechny pořady Plusu v posledním uzavřeném týdnu a v týdnu ze začátku dvouleté historie. Po žánrech uvedeme nedohledané díly a chyby v osobách či délkách. Tato kontrola zatím neproběhla.
 
-## Až přibude druhá stanice
-
-U další stanice ČRo nejprve vyzkoušej, zda současnému importu stačí předat jinou stanici. U jiného provozovatele nejprve spáruj jeden skutečný díl s odvysíláním. Pokud má zdroj jiný formát, přidej malý modul, který naplní stejné záznamy ve SQLite. Teprve z obou fungujících importů odvoď společné rozhraní. Na stejném období ověř, že přidání stanice nemění minuty ani počet dílů Plusu.
-
-**Kandidát na druhou stanici: Radio Prostor.** Veřejný program uvádí pořady, časy a u části bloků moderátory. Tříhodinový blok s hosty vyžaduje další zdroj pro délku samotného rozhovoru. Dostupnost dvouleté programové historie ani přesnost párování s publikovanými rozhovory zatím nejsou ověřené. [Program Radia Prostor](https://www.radioprostor.cz/program)
+U další stanice ČRo nejprve vyzkoušíme stejný import s jiným ID stanice. U jiného rádia ověříme jeden díl proti jeho programu a podle výsledku doplníme načítání zdroje. Třeba Radio Prostor zveřejňuje časy vysílacích bloků, ale z délky bloku nelze určit čas jednoho hosta. Rozsah jeho historického archivu zatím neznáme. Po přidání rádia ověříme, že se údaje Plusu nezměnily. [Program Radia Prostor](https://www.radioprostor.cz/program)
