@@ -1,22 +1,23 @@
 # SlantIndex
 
-SlantIndex ukáže, kdo dostává prostor na ČRo Plus a jaké veřejně doložené postoje tito lidé nebo zastupované instituce prosazují. Čtenář uvidí ekonomické a kulturní skóre stanice za posledních 30 dní, dvouletý trend a díly, ze kterých výsledek vychází.
+SlantIndex shows who gets airtime on Czech Radio Plus (ČRo Plus) and the publicly documented economic and cultural positions associated with those appearances. Readers can trace a station score back to the broadcasts, the people or institutions scored, and the evidence. The index describes the selection of voices. It does not measure what a guest said in a particular interview or how the interviewer treated them.
 
-## Co dodáme postupně
+## Release plan
 
-1. **Kdo vystoupil.** Projdeme všechny pořady ČRo Plus za posledních 30 dní. Web ukáže osoby, role, počty dílů a odkazy na originály. U dílu s neznámým obsazením to uvede.
-2. **Kolik prostoru dostal.** Přidáme odvysílané minuty včetně repríz. Hodinový rozhovor odvysílaný dvakrát dá hostovi 120 minut a jeden původní díl.
-3. **Jaké postoje dostávají prostor.** Přidáme karty osob a institucí se skóre, důvodem a citacemi. U každého vystoupení ukážeme, zda jsme použili skóre osoby, strany nebo instituce. Čtenář může navrhnout opravu. [Jak skóre počítáme](METHODOLOGY.md)
-4. **Jak se výběr mění.** Historii doplníme po měsících až na dva roky. Graf půjde rozkliknout podle pořadu, redaktora, osoby a instituce.
+1. **Who appeared?** Cover every show on Plus over the last 30 complete days. Show names, roles, episode counts and source links. Mark gaps in the schedule and unknown guests. The first implementation PR includes the SQLite migration, parser fixtures and a two-week archive check. Importing identical data twice must preserve counts and manual corrections.
+2. **How much airtime?** Add minutes for each broadcast, including repeats. A one-hour interview with one guest aired twice gives that guest 120 minutes and one original episode.
+3. **Which positions received airtime?** Add the two station scores, evidence-backed profiles and a reader correction form. Each scored appearance identifies whose score it uses. [Scoring methodology](METHODOLOGY.md)
+4. **How has the mix changed?** Extend coverage month by month to two years. Show a 30-day station trend and 90-day show trends. Add views by journalist, person and institution at this stage. A journalist’s guest list and their own on-air commentary answer different questions and appear separately.
 
-## Jak web funguje
+## Data flow
 
-Python načte program a stránky dílů. SQLite uloží díly, jejich odvysílání, účastníky, role a hodnocení se zdroji. Astro zveřejní přehledy na Cloudflare. Každé odvysílání má `station_id`, takže další rádio může používat stejný výpočet i web. [Jak získáme a ověříme data](SOURCES.md)
+Python imports the schedule, episodes, broadcasts and participants into SQLite. Each broadcast carries a station ID so another station can reuse the calculations. Astro builds the static site on Cloudflare. Role filters work from individual appearances and credited segments, so a guest with two selected roles counts once per episode. Overlapping minutes for that guest count once per broadcast. [Sources and import](SOURCES.md)
 
-První implementační PR přidá migraci SQLite, vzorky pro testy a výsledek kontroly dvou týdnů podle [popisu zdrojů](SOURCES.md). První verze je hotová, když web zobrazí celý dostupný program za 30 dní, označí mezery a opakovaný import stejných dat nezmění počty ani ruční opravy.
+When the correction form launches, a Cloudflare Worker will validate and rate-limit submissions and store them privately in D1. An editor applies accepted corrections to the source SQLite database and rebuilds affected pages.
 
-## Co zveřejníme
+## Publication and corrections
 
-První verze ukáže jména, role a zdroje. Při zavedení skóre zveřejníme profily institucí a stran. U politiků a dalších veřejných činitelů editor jednotlivě posoudí podklady a oprávnění zveřejnit osobní skóre. U ostatních osob standardně zobrazíme jen doložená vystoupení. U každého převzatého skóre pojmenujeme stranu nebo instituci, které patří.
-
-Před vydáním osobních profilů popíšeme v `PRIVACY.md`, podle čeho o zveřejnění rozhodujeme, jak požádat o opravu či stažení a jak dlouho uchováváme podněty. Při stažení odstraníme osobní skóre i z veřejné historie, exportů a dříve vydaných stránek a přepočítáme dotčené grafy.
+- Before importing real personal data, document the purpose, lawful basis and retention for the fields collected. Before publishing the first named listing, publish a privacy notice and a working contact for corrections or removal. An email address is enough for the first release.
+- Before recording or inferring political opinions about identifiable people, including sending identifiable material to a model for scoring, document the applicable legal basis and the conditions for that processing in `PRIVACY.md`. Development of the importer and scoring logic can use synthetic fixtures while that assessment is open. [GDPR, Articles 6 and 9](https://eur-lex.europa.eu/eli/reg/2016/679/)
+- Publish institutional and party profiles with their sources. Assess personal profiles of politicians and other public officials individually. For other guests, the default is a sourced appearance record. Any institutional score shown belongs to the named institution. Every score used in a public index must be public and traceable.
+- On withdrawal, remove the affected personal data from public pages, history, exports and earlier releases under our control. Rebuild the affected figures using the remaining publishable evidence. The notice explains how to request this and how long we keep submissions.
