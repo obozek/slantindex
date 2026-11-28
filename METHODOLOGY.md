@@ -45,7 +45,13 @@ Profil shrnuje veřejně doložené postoje osoby nebo instituce. Na její kart�
 
 Editor začne u těch, kterým jsme připsali nejvíc dosud neohodnocených minut na dané ose. O výši skóre rozhodují doložené postoje. U osoby vycházíme z jejích vlastních slov a veřejně podpořených návrhů. U instituce z oficiálních stanovisek a programů. Posoudíme i doklady, které navrženému skóre odporují. **Každé skóre musí mít důvod a přesnou citaci** s autorem, datem, odkazem a podle zdroje i stranou nebo časem v nahrávce.
 
-Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, sporné podklady nebo osa se netýká. Nulu použijeme jen pro doložený střed či smíšený postoj. U hodnocení evidujeme míru jistoty. U změny zaznamenáme původní hodnotu, kdo změnu schválil, proč a odkdy platí.
+Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, sporné podklady nebo osa se netýká. Nulu použijeme jen pro doložený střed či smíšený postoj. U hodnocení evidujeme míru jistoty.
+
+### Co když člověk změní názor nebo přejde jinam?
+
+- **Změna postoje.** Editor u dotčené osy přidá nové skóre s citací a datem, od kterého ho doklad podporuje. Původní skóre zachováme pro starší díly. Datum schválení a jméno editora evidujeme zvlášť. Stejně postupujeme při změně postoje instituce.
+- **Přestup.** V březnu host zastupoval think tank A (+1), v říjnu už zastupuje B (−1). Březnovému rozhovoru připíšeme +1 i při listopadové repríze. Říjnovému připíšeme −1. Samotný přestup osobní skóre hosta nemění.
+- **Oprava chyby.** Zjistíme-li, že jsme už v březnu přiřadili nesprávné skóre nebo instituci, opravíme i tehdejší výsledek a jeho reprízy. U opravy uvedeme důvod a zdroj.
 
 **Dva příklady zařazení podle konkrétního dokladu:**
 
