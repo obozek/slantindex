@@ -14,7 +14,9 @@
 
 U nejisté reprízy mohou být doložené odvysílané minuty známé i při nejasném počtu původních dílů. Délka vychází ze začátku a konce skutečného odvysílání. Shodná verze s doloženou stopáží v archivu nebo údaj z programu jsou náhradní odhady s uvedeným původem. Mezery a překryvy se kontrolují po stanici; nadřazený blok a jeho dílčí pořady nesmějí vykázat stejné sekundy dvakrát. Na hranici okna se sekundy oříznou. Den se vymezuje v `Europe/Prague`, uplynulý čas se počítá z UTC. Repríza zachovává roli, příslušnost a zdroje hodnocení platné při vzniku záznamu (výchozí datum premiéry).
 
-## 2. Dvě osy a původ hodnoty
+## Jak vznikne názorový profil
+
+Názorový profil shrnuje veřejně zastávané postoje jedné osoby nebo jedné instituce. Na kartě jsou dva samostatné řádky: **ekonomika** (menší až větší role státu) a **kultura** (konzervativní až progresivní postoje).
 
 | Stupeň | Ekonomická osa | Kulturní osa |
 |---|---|---|
@@ -24,9 +26,25 @@ U nejisté reprízy mohou být doložené odvysílané minuty známé i při nej
 | +1 | Dílčí zvýšení souhrnného výběru nebo míry přerozdělování. | Dílčí rozšíření rovného zacházení či osobní volby, například práv partnerů. |
 | +2 | Program podstatného zvýšení čistého daňového výběru a posílení přerozdělování. | Široké rozšíření osobní autonomie a rovnosti práv napříč více oblastmi. |
 
-Ekonomické otázky: kolik má veřejný sektor vybrat a vydat, kdo nese břemeno a jak se mění transfery? Kulturní otázky: kdo rozhoduje o rodinném uspořádání, reprodukčních právech a právech menšin, jakou roli má stát při prosazování tradice? Samotné přesunutí jedné daně nebo názor na jediný technický předpis celou osu neurčuje. **Velikost čísla popisuje postoj.** Jistota zvlášť vyjadřuje přímost, aktuálnost a soulad zdrojů.
+**Postup pro každou osu**
 
-Každá osa má stav `nehodnoceno / nedostatek důkazů / sporné / netýká se / zařazeno`. Pouze poslední stav má číselnou hodnotu. Editor prochází případy podle dosud nepokrytých odvysílaných minut, při shodě podle počtu dílů; pořadí i pokrytí jsou dohledatelné po žánrech a rolích. Zdroj, datum, jistota, způsob přiřazení a schvalující editor zůstávají u revize. Oprava omylu může změnit historii; skutečná změna postoje má nové datum účinnosti.
+1. Najdi veřejný výrok, který lze přímo připsat hodnocenému. U člověka použij jeho vlastní slova, podepsaný text nebo návrh, který veřejně podpořil. U instituce použij oficiální stanovisko, program či reformu, kterou doporučuje. Zaměstnání člověka dokládá profesní vazbu.
+2. Urči, co konkrétně prosazuje. V ekonomice zohledni čistý dopad na výběr daní, výdaje a přerozdělování. V kultuře například postoj k právům partnerů, reprodukčním otázkám nebo prosazování tradice zákonem. Porovnej relevantní výroky, včetně těch, které prvnímu závěru odporují.
+3. Vyber stupeň podle tabulky. Na kartě zveřejni **hodnotu, proč odpovídá právě tomuto stupni, a krátké přesné citace**. U každé citace uveď mluvčího či autora, název zdroje, datum a odkaz na konkrétní pasáž (strana PDF nebo čas audia, pokud existuje). Číslo je úsudek SlantIndexu. Citace umožňuje tento úsudek zkontrolovat.
+4. Když zdroj nestačí nebo zůstává rozpor, napiš „nezařazeno“ a důvod. Nula vyjadřuje doložený střed či smíšený postoj. Jistotu uveď zvlášť. U změny uchovej předchozí hodnocení, důvod změny, datum platnosti a schvalujícího editora.
+
+**Ukázky odůvodnění.** Jde o příklady práce s konkrétním podkladem. Úplný profil zohlední i další relevantní zdroje.
+
+| Karta a osa | Co může čtenář ověřit |
+|---|---|
+| PAQ Research · ekonomika | **Návrh +1.** PAQ se spoluautory doporučuje reformu, která ulevuje části pracujících a v součtu zvyšuje daňový výběr. Autoři píší: „Navrhovaná reforma by mohla vybrat do veřejných rozpočtů o 73 mld. Kč navíc vůči roku 2024.“ Dílčí zvýšení celkového výběru odpovídá +1. Samotná daňová studie nedokládá kulturní postoj. [PAQ Research, Centrum veřejných financí a IDEA, *Chytřejší daně*, 2025, oddíl 1.5.4, s. 50](https://chytrejsidane.cz/Studie_Chytrejsi_dane.pdf#page=51) |
+| Jsme fér · kultura | **Návrh +1.** Iniciativa požaduje rozšíření jednoho konkrétního práva na stejnopohlavní páry. Její výzva zní „JE ČAS NA MANŽELSTVÍ PRO VŠECHNY PÁRY“. To odpovídá +1 v otázce rodinného práva. Pro +2 by byly potřeba doklady o širším programu napříč tématy. [Jsme fér, úvodní výzva, ověřeno 28. 11. 2026](https://www.jsmefer.cz/) |
+
+Nejdřív zpracuj dosud nehodnocené profily s největším vysílacím časem. Čas určuje jejich váhu v přehledu stanice. **Skóre profilu určují pouze doložené postoje.** Pro výpočet pokrytí uchovej stav každé osy: `nehodnoceno / nedostatek důkazů / sporné / netýká se / zařazeno`. Číselnou hodnotu má pouze stav „zařazeno“.
+
+### Čí profil použít při vystoupení
+
+Osobní profil a profil instituce zůstávají oddělené. Při výpočtu výsledku stanice záleží na tom, v jaké roli člověk v daném dílu vystupoval.
 
 | Vysílací role | Výchozí přiřazení po jednotlivých osách |
 |---|---|
