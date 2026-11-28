@@ -49,10 +49,9 @@ Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, s
 
 ### Kdy přepočítáme minulost?
 
-1. **Změnil se postoj nebo zastupovaná instituce.** Když host v říjnu změní postoj, nové skóre platí od doložené změny. Když přejde z think tanku A do B, u každého dílu použijeme instituci, kterou v něm zastupoval. Listopadová repríza březnového rozhovoru stále patří k A. Přestup sám o sobě osobní skóre nemění.
-2. **Zpřesnili jsme hodnocení dřívějšího postoje.** V listopadu najdeme podklad, který dokládá osobní ekonomické skóre +2 už od března. Dosud jsme pro toto období uváděli +1. Opravíme všechny výsledky za doložené období, ve kterých se má použít jeho osobní skóre, včetně repríz. Graf ukáže přepočtené hodnoty. Původní +1 zůstane v historii hodnocení.
-
-U každé revize osoby i instituce uložíme osu, původní a nové skóre, období platnosti, důvod s citací a kdo revizi kdy schválil. V příkladu je březen začátkem platnosti a listopad datem revize.
+- **Zpřesnění skóre.** Na každé ose běžně stačí jedno skóre. Pokud v listopadu doložíme, že osobní skóre mělo být už od března +2 místo +1, přepočítáme dotčená vystoupení i jejich reprízy. V historii oprav zůstane původní a nové skóre, dotčené období, citace, důvod, editor a datum opravy.
+- **Přestup.** U každého vystoupení evidujeme, koho host zastupoval. I po jeho odchodu z think tanku A patří repríza rozhovoru, který poskytl za A, k této instituci.
+- **Skutečná změna názoru.** Dvě různá skóre pro dvě období zavedeme až u konkrétního doloženého případu, například když host na podzim veřejně změnil postoj. Starší díly pak použijí jeho dřívější skóre.
 
 **Dva příklady zařazení podle konkrétního dokladu:**
 
