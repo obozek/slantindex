@@ -1,71 +1,63 @@
-# Jak SlantIndex počítá výsledky
+# How SlantIndex calculates a station score
 
-## Jak číst index stanice
+## Reading the index
 
-Index ukazuje, kolik prostoru dostali hosté s různými postoji. Každá minuta rozhovoru má stejnou váhu. Z minut se známým skóre spočítáme průměr pro danou stanici, období a osu. Příklad pro ekonomickou osu za 30 dní ukazuje čtyři hosty.
+For one station, period and axis, the index is the average score weighted by credited airtime. Here is a 30-day example for the economic axis.
 
-| Host | Čas | Výsledek hodnocení |
+| Guest | Credited airtime | Assessment |
 |---|---:|---|
 | A | 60 min | +1 |
 | B | 20 min | −1 |
-| C | 10 min | Podklady jsme prošli, ale odporují si. |
-| D | 10 min | Podklady jsme ještě neprošli. |
+| C | 10 min | Reviewed. The sources conflict about the guest’s position. |
+| D | 10 min | Awaiting review. |
 
-- **Index +0,5.** Skóre známe u A a B. Výpočet je `(60 × 1 + 20 × (−1)) / 80 = +0,5`. A měl třikrát více času než B, proto má trojnásobnou váhu.
-- **Zařazeno 80 %.** Ze 100 minut přiřazených hostům má 80 minut známé skóre. Zbývajících 20 minut do průměru nevstoupí.
-- **Zkontrolováno 90 %.** Prošli jsme podklady k A, B i C. Zbývá prověřit D.
-- **Podle počtu dílů vyjde 0**, pokud každý host vystoupil v jednom původním dílu. A i B pak mají stejnou váhu: `(1 − 1) / 2 = 0`. Čtenář tak vidí rozdíl mezi počtem pozvání a délkou prostoru.
+- **Index +0.5.** A and B account for 80 scored minutes. The calculation is `(60 × 1 + 20 × (−1)) / 80 = +0.5`.
+- **80% scored, 90% reviewed.** C counts toward review coverage. Only A and B contribute to the average. D counts toward neither percentage’s numerator. Both percentages use all 100 credited minutes as their denominator.
+- **Episode-weighted index 0.** If each guest appeared in one episode first aired on this station during the period, A and B each get one vote. Their average is `(1 − 1) / 2 = 0`.
+- **Missing-score range 0 to +0.8.** Assigning −2 to both C and D gives 0 across all 100 minutes. Assigning +2 to both gives +0.8. Exclude cases explicitly marked “axis does not apply” from this sensitivity calculation.
 
-Vedle průměru zobrazíme počet různých hostů, podíl minut nejčastěji vysílaného hosta, minuty v každém stupni škály, důvody nezařazení a podíl odhadnutého času. Rozhovor, u kterého neznáme hosta nebo délku, mezi těmi 100 minutami vůbec není. Zvlášť proto uvedeme, kolik programu jsme dohledali a u kolika dílů známe obsazení.
+Alongside the index show the number of guests, the largest individual share of airtime, minutes at each score, reasons for missing scores and the estimated share of credited airtime. Report schedule and participant coverage separately. A segment with unknown guests or duration never entered the 100 credited minutes.
 
-**Kdy index zveřejníme?** Navrhujeme tři podmínky. Skóre na dané ose známe alespoň u tří různých hostů. Tito hosté mají dohromady alespoň deset vystoupení (dva hosté v jednom dílu jsou dvě vystoupení, repríza žádné další nepřidá). Skóre pokrývá alespoň 60 % minut připsaných hostům, při výpočtu podle počtu dílů alespoň 60 % vystoupení. V příkladu mají skóre jen dva hosté, takže web ukáže minuty, počty a důvod, proč index chybí. Hranice ověříme na skutečných datech.
+**When to publish a number.** For the selected station, axis, roles and window, require at least three distinct scored guests, ten scored guest–episode appearances first aired on that station in the window, and scores for at least 60% of credited minutes (or 60% of appearances in the episode view). Two guests in one episode count as two appearances. A repeat alone cannot meet the ten-appearance threshold. The example above would show counts, minutes and the reason the index is unavailable. Validate these proposed thresholds on pilot data.
 
-**Jak moc záleží na chybějících skóre?** V příkladu by při skóre −2 u C i D vyšel index 0. Při +2 u obou by vyšel +0,8. Tak zobrazíme možné rozpětí. Čas výslovně označený „osa se netýká“ do tohoto odhadu nevstupuje.
+## Counting broadcasts and roles
 
-## Jak započítáme vysílací čas
+- **Roles.** The default includes external guests and external commentators. Later views cover staff commentary and presenting separately. Filter the underlying records before counting. If one person matches two roles, count them once per episode and credit each overlapping segment once per broadcast.
+- **Interview.** A sole guest receives the whole interview, including questions. If two guests share 40 minutes and the split is unknown, credit each with 20 estimated minutes. Filtering for one guest preserves that guest’s share.
+- **Magazine show.** Credit only the guest’s segment. Leave it unassigned if duration or the participant list is unknown. Prefer actual broadcast timing. Mark durations taken from the schedule or a matching archive edit as estimates.
+- **Repeat.** Credit airtime again using the original episode’s role and applicable score, usually as of its premiere. For an edited repeat count only the retained segments. A March premiere on Plus repeated on Plus in November contributes November minutes, zero November original appearances and zero toward November’s ten-appearance threshold. If November is its first broadcast on another station, it counts once there. Flag syndicated episodes and unknown first-air dates. Unverified first broadcasts contribute no original-episode count.
+- **Window.** End the chart on the last complete day in Europe/Prague. Measure elapsed time in UTC seconds and display minutes. Clip broadcasts to the window and merge duplicate or overlapping records for the same airtime. A rolling 90-day show chart needs 89 days of history before its first plotted date.
+- **Station comparisons.** Count a simulcast on each station that aired it. Compare matching periods, windows, filters and methodology. Mark archive gaps on the chart.
 
-- **Role.** Výchozí přehled zahrne externí hosty a externí komentátory. Vlastní komentáře redaktorů a moderování mají samostatné přehledy. Při výběru více rolí vyjdeme z jednotlivých vystoupení. Člověk, který v jednom dílu zastával dvě vybrané role, přidá jeden díl. Překrývající se čas téže osoby připíšeme jen jednou.
-- **Rozhovor.** Jedinému hostovi připadne celý rozhovor včetně otázek. Pokud dva hosté společně diskutují 40 minut a přesnější rozdělení neznáme, připíšeme každému 20 minut a označíme odhad. Filtr jednoho hosta jeho podíl nezvětší. Moderování sledujeme zvlášť. Dvě role téže osoby ve stejném úseku jí další čas nepřidají.
-- **Magazín.** Započítáme jen úsek věnovaný hostovi. Bez doložené délky nebo při neúplném obsazení zůstane úsek nepřiřazený. Přednost má skutečný čas odvysílání. Délku převzatou z programu či shodné archivní verze označíme jako odhad.
-- **Repríza.** Přičteme znovu odvysílané minuty. U sestřihu pouze zachované úseky. Použijeme roli a hodnocení platné při vzniku dílu, obvykle k datu premiéry. V počtech dílů se host započítá jednou při prvním vysílání dílu na dané stanici. Převzatý díl a neznámé datum prvního vysílání označíme zvlášť.
-- **Období.** Graf končí posledním uzavřeným dnem v pásmu Praha. Čas měříme v sekundách podle UTC a zobrazujeme v minutách. Z pořadu na hranici období patří do výsledku jen příslušná část. Překrývající se záznamy sloučíme. Pro 90denní přehled pořadu načteme i 89 dní před začátkem grafu.
-- **Další stanice.** Společné vysílání si každá započítá do vlastního přehledu. Při porovnání použijeme stejné období, délku okna, filtry a metodiku. Mezeru v archivu vyznačíme v grafu.
+## Scoring a public position
 
-## Jak vznikne názorový profil
+Score the economic and cultural axes independently. Start with profiles that account for the most unscored airtime on that axis. Each published score needs a reason, an exact quotation, author, date, link and page or timestamp where available. Check contrary evidence. Use the person’s public statements or endorsed proposals and the institution’s official positions. Record confidence separately.
 
-Profil shrnuje veřejně doložené postoje osoby nebo instituce. Na její kartě čtenář uvidí zvlášť ekonomické a kulturní skóre a u každého doklad, ze kterého vychází.
-
-| Skóre | Ekonomická osa | Kulturní osa |
+| Score | Economic axis | Cultural axis |
 |---|---|---|
-| −2 | Rozsáhlé snížení daní, výdajů státu a přerozdělování | Prosazování tradičních pravidel zákonem napříč oblastmi života |
-| −1 | Dílčí snížení celkového zdanění nebo přerozdělování | Zachování či zpřísnění tradičních pravidel v konkrétní oblasti |
-| 0 | Doložený střed nebo kombinace opačných postojů | Doložený střed nebo kombinace opačných postojů |
-| +1 | Dílčí zvýšení celkového zdanění nebo přerozdělování | Rozšíření práv či osobní volby v konkrétní oblasti |
-| +2 | Výrazné zvýšení celkového zdanění a přerozdělování | Široké rozšíření osobní volby a rovných práv napříč oblastmi |
+| −2 | Broad cuts to taxation, public spending and redistribution | Enforcing traditional rules in law across several areas of life |
+| −1 | A limited reduction in overall taxation or redistribution | Preserving or tightening traditional rules in one area |
+| 0 | Documented middle position on taxation or redistribution | Documented middle position on cultural policy |
+| +1 | A limited increase in overall taxation or redistribution | Expanding rights or personal choice in one area |
+| +2 | A substantial increase in overall taxation and redistribution | Broad expansion of choice and equal rights across several areas |
 
-Editor začne u těch, kterým jsme připsali nejvíc dosud neohodnocených minut na dané ose. O výši skóre rozhodují doložené postoje. U osoby vycházíme z jejích vlastních slov a veřejně podpořených návrhů. U instituce z oficiálních stanovisek a programů. Posoudíme i doklady, které navrženému skóre odporují. **Každé skóre musí mít důvod a přesnou citaci** s autorem, datem, odkazem a podle zdroje i stranou nebo časem v nahrávce.
+**Zero requires positive evidence.** A published proposal to keep the overall tax burden and redistribution steady can support 0 even if it shifts taxes between sources. Two conflicting accounts of whether the guest wants overall taxes raised or cut leave the position **disputed** until an editor can resolve them. Opposite statements alone do not average to zero. Other unscored statuses are **awaiting review**, **insufficient evidence** and **axis does not apply**.
 
-Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, sporné podklady nebo osa se netýká. Nulu použijeme jen pro doložený střed či smíšený postoj. U hodnocení evidujeme míru jistoty.
+**Two examples of proposed scores**
 
-### Kdy přepočítáme minulost?
+- **PAQ Research, economic +1.** The joint reform proposes lower taxes on labour and higher total revenue. The authors estimate “o 73 mld. Kč navíc vůči roku 2024” (CZK 73 billion more than in 2024). This supports a positive economic score for this proposal. An institutional profile also considers other evidence. [PAQ Research, Centre for Public Finance and IDEA, *Chytřejší daně*, 2025, p. 50](https://chytrejsidane.cz/Studie_Chytrejsi_dane.pdf#page=51)
+- **Jsme fér, cultural +1.** Its call for “MANŽELSTVÍ PRO VŠECHNY PÁRY” (marriage for all couples) advocates extending one specific right. [Jsme fér, campaign homepage](https://www.jsmefer.cz/)
 
-- **Zpřesnění skóre.** Na každé ose běžně stačí jedno skóre. Pokud v listopadu doložíme, že osobní skóre mělo být už od března +2 místo +1, přepočítáme dotčená vystoupení i jejich reprízy. V historii oprav zůstane původní a nové skóre, dotčené období, citace, důvod, editor a datum opravy.
-- **Přestup.** U každého vystoupení evidujeme, koho host zastupoval. I po jeho odchodu z think tanku A patří repríza rozhovoru, který poskytl za A, k této instituci.
-- **Skutečná změna názoru.** Dvě různá skóre pro dvě období zavedeme až u konkrétního doloženého případu, například když host na podzim veřejně změnil postoj. Starší díly pak použijí jeho dřívější skóre.
+Party positions follow the same evidence rule. Editors may consult the Chapel Hill Expert Survey for context. A survey rating alone cannot establish a SlantIndex score. The first scoring release uses cited policy evidence for each party, so it requires neither a numerical conversion nor a current survey entry for every party. [CHES Europe](https://www.chesdata.eu/ches-europe/)
 
-**Dva příklady zařazení podle konkrétního dokladu:**
+## Whose score applies?
 
-- **PAQ Research, ekonomika, návrh +1.** Doporučená reforma ulevuje části pracujících, ale celkový výběr zvyšuje. Autoři píší: „Navrhovaná reforma by mohla vybrat do veřejných rozpočtů o 73 mld. Kč navíc vůči roku 2024.“ To dokládá dílčí zvýšení celkového zdanění. [PAQ Research, Centrum veřejných financí a IDEA, *Chytřejší daně*, 2025, s. 50](https://chytrejsidane.cz/Studie_Chytrejsi_dane.pdf#page=51)
-- **Jsme fér, kultura, návrh +1.** Výzva „JE ČAS NA MANŽELSTVÍ PRO VŠECHNY PÁRY“ dokládá požadavek rozšířit jedno konkrétní právo. [Jsme fér, úvodní výzva, ověřeno 28. 11. 2026](https://www.jsmefer.cz/)
+- **Politician.** On each axis, use an explicitly approved, publishable personal score applicable when the episode was made. Otherwise use the published score of the party represented at that time, including for a minister. A minister with personal economic score −1 and only a party cultural score of +1 contributes −1 and +1 respectively. If neither a publishable personal score nor a documented party with a published score is available on an axis, leave that axis unscored.
+- **Other guest.** Use the institution’s score when the guest represents it and the guest’s publishable personal score when speaking independently. Treat an introduction as an economist for a named institute as institutional representation unless the guest explicitly speaks in a personal capacity. Save the episode reference. A job listed only in a biography is insufficient.
+- **Missing or private score.** Leave the axis unscored if the selected source lacks a publishable score or the role is unclear. A 20-minute interview for an institution scored +1 only on economics yields 20 minutes at +1 on economics and 20 unscored cultural minutes. Publish the credited time, role, applied score or status, profile source and episode reference for each contribution so readers can reproduce the result.
 
-U stran lze využít [expertní průzkum CHES](https://www.chesdata.eu/ches-europe/). Jeho ekonomická (LRECON) a kulturní (GALTAN) škála mají vůči našim opačný směr. Obě převádíme podle `2 − 0,4 × původní hodnota`. Zaokrouhlujeme na celé číslo, poloviny od nuly. Hodnotám 0, 5 a 10 tedy odpovídá +2, 0 a −2. Uložíme i původní hodnotu a ročník průzkumu.
+## When history changes
 
-### Čí skóre použít u hosta
-
-**Politik.** Na každé ose má přednost jeho výslovně schválené osobní skóre platné v době vzniku dílu. Jinak použijeme skóre strany, kterou tehdy zastupoval. To platí i při vystoupení ve funkci ministra. Má-li ministr vlastní ekonomické skóre −1 a kulturní skóre má jen jeho strana (+1), vystoupení se započte jako −1 v ekonomice a +1 v kultuře. Pokud osobní skóre chybí a politik žádnou stranu nezastupoval, stranu nelze doložit nebo na dané ose nemá skóre, vykážeme minuty jako nezařazené.
-
-**Ostatní hosté.** Host může mít na ekonomické ose −1 a jeho instituce +1. Když ji zastupuje, rozhovoru připíšeme +1. Když mluví za sebe, připíšeme −1. Na osobní kartě mu v obou případech zůstává −1.
-
-Roli určíme z konkrétního dílu a uložíme odkaz. Když pořad hosta představí jako ekonoma dané instituce, počítáme ho jako jejího zástupce. Pokud host výslovně řekne, že mluví za sebe, platí jeho osobní skóre. Samotný údaj o zaměstnavateli v životopisu k přiřazení instituce nestačí.
-
-**Ostatní hosté bez použitelného skóre.** Když chybí skóre nebo je role nejasná, minuty vykážeme jako nezařazené pro příslušnou osu. Například 20 minut zástupce instituce s ekonomickým skóre +1 a nehodnocenou kulturou znamená 20 minut s +1 v ekonomice a 20 nezařazených minut v kultuře.
+- **Better evidence.** Usually one score per axis suffices. If evidence found in November supports +2 since March where we previously used +1, recalculate the affected appearances and repeats. Log the old and new scores, applicable period, citation, reason, editor and revision date.
+- **Change of institution.** Record representation per appearance. A repeat of a guest’s interview for institute A still belongs to A after the guest joins B.
+- **Change of position.** Introduce separate periods on an axis only when a change is documented. Earlier episodes keep the score applicable when they were made.
