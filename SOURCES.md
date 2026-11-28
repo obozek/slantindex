@@ -20,7 +20,7 @@
 
 - *Pro a proti*, daň ze slazených nápojů. Stránka dokládá účast obou diskutujících a výslovně připomíná starší premiéru. Import získá hosty z úvodu a druhé vysílání připojí ke stejnému obsahu. [Díl na ČRo Plus](https://plus.rozhlas.cz/dan-ze-slazenych-napoju-snizi-obezitu-soudi-ekonom-napoje-za-nemuzou-mini-9324188)
 - *Život k nezaplacení*, 25. 11. 2026. V úvodu je Daniel Prokop uveden jako účastník, v podpisu jsou tři položky. Text dokládá účast, podpis autorství. U sdíleného pořadu je pro zahrnutí do Plusu potřeba doložit konkrétní vysílání v programu Plusu. [Díl na Radiožurnálu](https://radiozurnal.rozhlas.cz/danime-praci-ale-majetek-temer-vubec-cesko-je-v-tom-vyjimecne-rika-sociolog-9658893)
-- První ukázka ověří jeden pořad za sedm dní. Pro měření pokrytí celého Plusu přidej ostatní pořady z posledního uzavřeného týdne a před doplněním historie také sedm dní na začátku dvouletého období. Ulož vstupy nebo povolené minimalizované vzorky, označ role a časové úseky v kontrolním vzorku a změř přesnost i podíl nalezených vystoupení. U délek porovnej zdroj odhadu a absolutní chybu proti ručně ověřeným minutám. Uveď velikost vzorku a výsledky po žánrech. **Dvoutýdenní měření zatím neproběhlo.**
+- První import projde všechny pořady ČRo Plus ve stejném období. Na posledním uzavřeném týdnu a na týdnu ze začátku dvouleté historie ověř správnost přiřazení osob a délek. Výsledky uveď po žánrech spolu s počtem nedohledaných dílů. Dvoutýdenní kontrola zatím neproběhla.
 
 ## Až přibude druhá stanice
 
