@@ -1,69 +1,62 @@
-# Metodika SlantIndexu · návrh v1
+# Jak SlantIndex počítá výsledky
 
-## 1. Čas a četnost
+## Jak číst index stanice
 
-**Hlavní váha je odvysílaný prostor přidělený osobě**, měřený v sekundách a zobrazovaný v minutách. Hodinový rozhovor s jediným hostem přidá hostovi 60 minut. Jeho úplná repríza přidá dalších 60. Jde o čas pořadu věnovaný hostovi, včetně otázek. Výpočet nepředpokládá, že host právě tolik minut mluvil.
+Index je průměrné skóre hostů vážené jejich vysílacím časem. Počítáme ho zvlášť pro každou stanici, období a osu. Příklad pro ekonomickou osu za 30 dní:
 
-| Situace | Pravidlo |
-|---|---|
-| Jeden či více hostů | Rozděl vysílání podle doložených úseků se známým obsazením. Jedinému hostu připadne celý úsek. Společný úsek více vystupujících rozděl rovným dílem a označ odhad. Čtyřicet minut dvou hostů znamená po 20 minutách. U zveřejněných údajů rozliš čas celého známého úseku a odhad podílu konkrétní osoby. |
-| Smíšený pořad | Započítej doloženou část s hosty. Hudba, reklama, zprávy nebo další rozhovor mimo ni nedostanou váhu původního hosta. U neúplného obsazení nebo neznámé délky rozhovoru v magazínu ponech čas nepřiřazený. Celou stopáž lze použít u doloženého celodílového formátu. |
-| Role a filtry | Pro každý úsek rozděl čas mezi všechny obsahově vystupující **před filtrováním**. Role téže osoby tvoří množinu. Vypnutí jednoho ze dvou hostů nezvýší váhu druhého. Čistě moderátorský čas tvoří samostatný pohled na vedení pořadů. Překryv s časem hostů se nesčítá. |
-| Repríza, sestřih, souběh | Každá stanice vykáže každé své odvysílání. Sestřih používá vlastní délku a obsazení zachovaných úseků. Společná půlhodina přidá každé stanici 30 minut v jejím vlastním přehledu. Dosah v posluchačích neznáme. |
-| Původní díly | Druhá metrika počítá osobu v jednom dílu jednou. Rozhoduje první odvysílání na sledované stanici. První převzetí staršího dílu jinou stanicí je v tomto pohledu výslovně označené. Neurčené první vysílání se vykazuje zvlášť. |
+| Host | Čas | Výsledek hodnocení |
+|---|---:|---|
+| A | 60 min | +1 |
+| B | 20 min | −1 |
+| C | 10 min | Podklady jsme prošli, ale odporují si. |
+| D | 10 min | Podklady jsme ještě neprošli. |
 
-U nejisté reprízy mohou být doložené odvysílané minuty známé i při nejasném počtu původních dílů. Délka vychází ze začátku a konce skutečného odvysílání. Shodná verze s doloženou stopáží v archivu nebo údaj z programu jsou náhradní odhady s uvedeným původem. Mezery a překryvy se kontrolují po stanici; nadřazený blok a jeho dílčí pořady nesmějí vykázat stejné sekundy dvakrát. Na hranici okna se sekundy oříznou. Den se vymezuje v `Europe/Prague`, uplynulý čas se počítá z UTC. Repríza zachovává roli, příslušnost a zdroje hodnocení platné při vzniku záznamu (výchozí datum premiéry).
+- **Index +0,5.** Skóre známe u A a B. Výpočet je `(60 × 1 + 20 × (−1)) / 80 = +0,5`. A měl třikrát více času než B, proto má trojnásobnou váhu.
+- **Zařazeno 80 %.** Ze 100 minut přiřazených hostům má 80 minut známé skóre. Zbývajících 20 minut do průměru nevstoupí.
+- **Zkontrolováno 90 %.** Prošli jsme podklady k A, B i C. Zbývá prověřit D.
+- **Podle počtu dílů vyjde 0**, pokud každý host vystoupil v jednom původním dílu. A i B pak mají stejnou váhu: `(1 − 1) / 2 = 0`. Čtenář tak vidí rozdíl mezi počtem pozvání a délkou prostoru.
+
+Vedle průměru zobrazíme minuty v každém stupni škály, důvody nezařazení a podíl odhadnutého času. Rozhovor, u kterého neznáme hosta nebo délku, mezi těmi 100 minutami vůbec není. Zvlášť proto uvedeme, kolik programu jsme dohledali a u kolika dílů známe obsazení.
+
+**Kdy ukázat číslo.** Navržené minimum pro zvolenou osu jsou tři různé osoby se známým skóre, 10 různých zařazených dvojic osoba–původní díl a alespoň 60 % zařazené váhy (minut nebo vystoupení podle zvoleného pohledu). Repríza další dvojici nevytváří. Malý příklad výše vysvětluje výpočet. Na webu by se u něj zobrazily jen minuty, počty a důvod chybějícího indexu. Hranice ověříme na skutečných datech.
+
+**Jak moc záleží na chybějících skóre?** V příkladu by při skóre −2 u C i D vyšel index 0. Při +2 u obou by vyšel +0,8. Tak zobrazíme možné rozpětí. Čas výslovně označený „osa se netýká“ do tohoto odhadu nevstupuje.
+
+## Jak započítáme vysílací čas
+
+- **Rozhovor.** Jedinému hostovi připadne celý rozhovor včetně otázek. Pokud dva hosté společně diskutují 40 minut a přesnější rozdělení neznáme, připíšeme každému 20 minut a označíme odhad. Filtr jednoho hosta jeho podíl nezvětší. Moderování sledujeme zvlášť. Dvě role téže osoby ve stejném úseku jí další čas nepřidají.
+- **Magazín.** Započítáme jen úsek věnovaný hostovi. Bez doložené délky nebo při neúplném obsazení zůstane úsek nepřiřazený. Přednost má skutečný čas odvysílání. Délku převzatou z programu či shodné archivní verze označíme jako odhad.
+- **Repríza.** Přičteme znovu odvysílané minuty. U sestřihu pouze zachované úseky. Použijeme roli a hodnocení platné při vzniku dílu, obvykle k datu premiéry. V počtech dílů se host započítá jednou při prvním vysílání dílu na dané stanici. Převzatý díl a neznámé datum prvního vysílání označíme zvlášť.
+- **Období.** Graf končí posledním uzavřeným dnem v pásmu Praha. Čas měříme v sekundách podle UTC a zobrazujeme v minutách. Z pořadu na hranici období patří do výsledku jen příslušná část. Překrývající se záznamy sloučíme. Pro 90denní přehled pořadu načteme i 89 dní před začátkem grafu.
+- **Další stanice.** Společné vysílání si každá započítá do vlastního přehledu. Při porovnání použijeme stejné období, délku okna, filtry a metodiku. Mezeru v archivu vyznačíme v grafu.
 
 ## Jak vznikne názorový profil
 
-Názorový profil shrnuje veřejně zastávané postoje jedné osoby nebo jedné instituce. Na kartě jsou dva samostatné řádky: **ekonomika** (menší až větší role státu) a **kultura** (konzervativní až progresivní postoje).
+Osoba a instituce mají samostatné karty. Každá karta má dvě hodnocení:
 
-| Stupeň | Ekonomická osa | Kulturní osa |
+| Skóre | Ekonomická osa | Kulturní osa |
 |---|---|---|
-| −2 | Program rozsáhlého snížení celkových daní, veřejných výdajů a transferů. | Široké prosazování tradičních pravidel rodiny a veřejné morálky zákonem. |
-| −1 | Dílčí snížení souhrnné zátěže nebo přerozdělování. | Zachování či cílené zpřísnění tradičních omezení v konkrétní oblasti. |
-| 0 | Doložený střed nebo zdůvodněná kombinace opačných ekonomických priorit. | Doložený střed nebo kombinace protichůdných kulturních postojů. |
-| +1 | Dílčí zvýšení souhrnného výběru nebo míry přerozdělování. | Dílčí rozšíření rovného zacházení či osobní volby, například práv partnerů. |
-| +2 | Program podstatného zvýšení čistého daňového výběru a posílení přerozdělování. | Široké rozšíření osobní autonomie a rovnosti práv napříč více oblastmi. |
+| −2 | Rozsáhlé snížení daní, výdajů státu a přerozdělování | Prosazování tradičních pravidel zákonem napříč oblastmi života |
+| −1 | Dílčí snížení celkového zdanění nebo přerozdělování | Zachování či zpřísnění tradičních pravidel v konkrétní oblasti |
+| 0 | Doložený střed nebo kombinace opačných postojů | Doložený střed nebo kombinace opačných postojů |
+| +1 | Dílčí zvýšení celkového zdanění nebo přerozdělování | Rozšíření práv či osobní volby v konkrétní oblasti |
+| +2 | Výrazné zvýšení celkového zdanění a přerozdělování | Široké rozšíření osobní volby a rovných práv napříč oblastmi |
 
-**Postup pro každou osu**
+Nejdřív hodnotíme profily s nejvíce vysílacími minutami. U osoby vycházíme z jejích vlastních slov a veřejně podpořených návrhů. U instituce z oficiálních stanovisek a programů. Posoudíme i doklady, které navrženému skóre odporují. **Každé skóre musí mít důvod a přesnou citaci** s autorem, datem, odkazem a podle zdroje i stranou nebo časem v nahrávce.
 
-1. Najdi veřejný výrok, který lze přímo připsat hodnocenému. U člověka použij jeho vlastní slova, podepsaný text nebo návrh, který veřejně podpořil. U instituce použij oficiální stanovisko, program či reformu, kterou doporučuje. Zaměstnání člověka dokládá profesní vazbu.
-2. Urči, co konkrétně prosazuje. V ekonomice zohledni čistý dopad na výběr daní, výdaje a přerozdělování. V kultuře například postoj k právům partnerů, reprodukčním otázkám nebo prosazování tradice zákonem. Porovnej relevantní výroky, včetně těch, které prvnímu závěru odporují.
-3. Vyber stupeň podle tabulky. Na kartě zveřejni **hodnotu, proč odpovídá právě tomuto stupni, a krátké přesné citace**. U každé citace uveď mluvčího či autora, název zdroje, datum a odkaz na konkrétní pasáž (strana PDF nebo čas audia, pokud existuje). Číslo je úsudek SlantIndexu. Citace umožňuje tento úsudek zkontrolovat.
-4. Když zdroj nestačí nebo zůstává rozpor, napiš „nezařazeno“ a důvod. Nula vyjadřuje doložený střed či smíšený postoj. Jistotu uveď zvlášť. U změny uchovej předchozí hodnocení, důvod změny, datum platnosti a schvalujícího editora.
+Dokud skóre nelze určit, uvedeme důvod: zatím nehodnoceno, málo důkazů, sporné podklady nebo osa se netýká. Nulu použijeme jen pro doložený střed či smíšený postoj. U hodnocení evidujeme míru jistoty. U změny zaznamenáme původní hodnotu, kdo změnu schválil, proč a odkdy platí.
 
-**Ukázky odůvodnění.** Jde o příklady práce s konkrétním podkladem. Úplný profil zohlední i další relevantní zdroje.
+**Dva příklady zařazení podle konkrétního dokladu:**
 
-| Karta a osa | Co může čtenář ověřit |
-|---|---|
-| PAQ Research · ekonomika | **Návrh +1.** PAQ se spoluautory doporučuje reformu, která ulevuje části pracujících a v součtu zvyšuje daňový výběr. Autoři píší: „Navrhovaná reforma by mohla vybrat do veřejných rozpočtů o 73 mld. Kč navíc vůči roku 2024.“ Dílčí zvýšení celkového výběru odpovídá +1. Samotná daňová studie nedokládá kulturní postoj. [PAQ Research, Centrum veřejných financí a IDEA, *Chytřejší daně*, 2025, oddíl 1.5.4, s. 50](https://chytrejsidane.cz/Studie_Chytrejsi_dane.pdf#page=51) |
-| Jsme fér · kultura | **Návrh +1.** Iniciativa požaduje rozšíření jednoho konkrétního práva na stejnopohlavní páry. Její výzva zní „JE ČAS NA MANŽELSTVÍ PRO VŠECHNY PÁRY“. To odpovídá +1 v otázce rodinného práva. Pro +2 by byly potřeba doklady o širším programu napříč tématy. [Jsme fér, úvodní výzva, ověřeno 28. 11. 2026](https://www.jsmefer.cz/) |
+- **PAQ Research, ekonomika, návrh +1.** Doporučená reforma ulevuje části pracujících, ale celkový výběr zvyšuje. Autoři píší: „Navrhovaná reforma by mohla vybrat do veřejných rozpočtů o 73 mld. Kč navíc vůči roku 2024.“ To dokládá dílčí zvýšení celkového zdanění. [PAQ Research, Centrum veřejných financí a IDEA, *Chytřejší daně*, 2025, s. 50](https://chytrejsidane.cz/Studie_Chytrejsi_dane.pdf#page=51)
+- **Jsme fér, kultura, návrh +1.** Výzva „JE ČAS NA MANŽELSTVÍ PRO VŠECHNY PÁRY“ dokládá požadavek rozšířit jedno konkrétní právo. [Jsme fér, úvodní výzva, ověřeno 28. 11. 2026](https://www.jsmefer.cz/)
 
-Nejdřív zpracuj dosud nehodnocené profily s největším vysílacím časem. Čas určuje jejich váhu v přehledu stanice. **Skóre profilu určují pouze doložené postoje.** Pro výpočet pokrytí uchovej stav každé osy: `nehodnoceno / nedostatek důkazů / sporné / netýká se / zařazeno`. Číselnou hodnotu má pouze stav „zařazeno“.
+U stran lze využít [expertní průzkum CHES](https://www.chesdata.eu/ches-europe/). Jeho ekonomická (LRECON) a kulturní (GALTAN) škála mají vůči našim opačný směr. Obě převádíme podle `2 − 0,4 × původní hodnota`. Zaokrouhlujeme na celé číslo, poloviny od nuly. Hodnotám 0, 5 a 10 tedy odpovídá +2, 0 a −2. Uložíme i původní hodnotu a ročník průzkumu.
 
 ### Čí skóre použít u hosta
 
-1. **Host vystupuje za instituci.** Použij pro jeho minuty skóre této instituce, i když má host vlastní skóre. Jako podklad stačí, že ho pořad pro tento rozhovor představí v institucionální roli, například „ekonom PAQ Research“. K vystoupení ulož název instituce a odkaz na doklad. Zaměstnavatel nalezený pouze v životopise k tomu nestačí.
-2. **Host vystupuje sám za sebe.** Použij jeho schválené osobní skóre, pokud ho máme. Výslovné uvedení, že jde o osobní vystoupení, má přednost před zmínkou o zaměstnavateli.
-3. **Chybí hodnocení nebo není jasné, koho host zastupuje.** Na každé ose zvlášť označ minuty jako „nezařazené“. Zůstanou v celkovém vysílacím čase, do průměru této osy nevstoupí.
+**Host zastupuje instituci:** použijeme její skóre, i kdyby měl jiné osobní skóre. Stačí, že ho pořad představí například jako „ekonoma PAQ Research“. Uložíme odkaz na toto představení. Údaj o zaměstnavateli nalezený jen v životopisu zastupování nedokládá.
 
-**Příklad.** Ekonom vystoupí za PAQ Research na 20 minut. Pokud má PAQ ekonomické skóre +1 a kulturní osu nehodnocenou, započítá se 20 minut se skóre +1 na ekonomické ose a 20 nezařazených minut na kulturní ose. Na kartě dílu je uvedeno „použité skóre: PAQ Research“. Osobní profil ekonoma zůstává beze změny.
+**Host mluví za sebe:** použijeme jeho vlastní schválené skóre. Pokud výslovně uvede, že mluví za sebe, má to přednost před představením jeho zaměstnavatele.
 
-Pro kalibraci politických stran lze použít [CHES Europe](https://www.chesdata.eu/ches-europe/). Proměnné LRECON (0 levice, 10 pravice) a GALTAN (0 libertariánská, 10 tradiční) mají opačnou orientaci vůči našim osám. Návrh převodu pro obě: `z = 2 − 0,4 × x`, zaokrouhlení na celé číslo, přesnou polovinu od nuly. Test `0 → +2, 5 → 0, 10 → −2`. Zachovat ročník, původní hodnotu a zdroj. CHES hodnotí stranické vedení.
-
-## 3. Výpočet a publikovatelnost
-
-Pro jednu **stanici**, osu a zvolené okno: **index = Σ(sekundy × skóre) / S**, kde `S` jsou zařazené sekundy. `T` jsou všechny přidělené sekundy ve výběru, `R` z nich mají redakčně posouzený stav (včetně sporných). Zobraz `R/T` zkontrolováno, `S/T` zařazeno, rozložení minut v pěti stupních, rozpad stavů, podíl odhadovaných minut a rozsah nevyřešených bloků. Pokrytí programu a obsazení je samostatné měřítko. Četnost původních dílů používá stejný výpočet s jednotkovou vahou.
-
-**Počáteční publikační práh:** nejméně 10 různých zařazených dvojic osoba–původní díl, alespoň 3 různé zařazené osoby a pokrytí vah alespoň 60 %. Reprízy zvyšují váhu, počet různých dvojic nezvýší. Pod prahem zobraz četnosti, minuty a důvod potlačení. Prahy jsou parametry metodiky k revizi po pilotu. Graf končí posledním uzavřeným dnem. Importuje se dalších 89 dní pro úplné počáteční okno pořadů.
-
-Vliv nezařazených minut ukaž jako **rozsah citlivosti**. Pro vážený součet `B` a `U` minut s neznámým postojem jsou krajní hodnoty `(B ± 2U)/(S+U)`; všechny veličiny musí mít shodnou časovou jednotku. Minuty označené „netýká se“ leží mimo tento výpočet. Interval popisuje možné hodnoty u nepokrytých postojů. Neúplně zachycené vysílání vyžaduje samostatný údaj o pokrytí.
-
-**Porovnání stanic.** Použij společné dostupné období, stejnou délku okna, role, žánrový filtr a revizi metodiky. Každá stanice má vlastní jmenovatel, pokrytí a publikační práh. Výpadek archivu zobraz jako mezeru. Přidání stanice B samo o sobě nesmí změnit hodnoty stanice A.
-
-## 4. Referenční příklady
-
-- Na A má host +2 hodinový díl a jeho hodinovou reprízu. Jiný host −1 má půlhodinu. A vykáže 150 přiřazených minut. Interní výpočet dá `(120×2 − 30)/150 = 1,4`; podle dvou původních dílů `(+2 − 1)/2 = 0,5`. Titulní index je v obou případech pod publikačním prahem.
-- Stanice B odvysílá první hodinový díl jen jednou. B vykáže 60 minut, jeden původní díl a interní výsledek +2 (pod publikačním prahem). Stanice A má stále 150 minut a výsledek +1,4. Platí i při souběžné premiéře.
-- Ve společném 40minutovém úseku je externí host +1 a interní expert s nehodnocenou osou. Celkem 40 minut, z toho 20 zařazených. Filtr externích ukáže 20 z 20 minut. Druhá role stejného hosta ani opakovaný import žádnou minutu nepřidá.
+**Chybí skóre nebo je role nejasná:** minuty vykážeme jako nezařazené pro příslušnou osu. Například 20 minut zástupce instituce s ekonomickým skóre +1 a nehodnocenou kulturou znamená 20 minut s +1 v ekonomice a 20 nezařazených minut v kultuře.
