@@ -7,6 +7,7 @@ from pathlib import Path
 import sqlite3
 import sys
 import tempfile
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from .archive import connect, dates, import_day, snapshot
@@ -64,6 +65,13 @@ def main():
                     body = fetch(url)
                 import_day(db, day, body, url)
                 print(f"{day} imported")
+            except HTTPError as exc:
+                print(f"{day} failed: HTTP {exc.code}", file=sys.stderr)
+                failed = True
+                if exc.code == 429 or exc.headers.get("Retry-After"):
+                    delay = exc.headers.get("Retry-After", "the next scheduled run")
+                    print(f"Stopping the range. Retry after {delay}.", file=sys.stderr)
+                    break
             except (OSError, ValueError, KeyError, AttributeError, TypeError,
                     sqlite3.Error, http.client.HTTPException) as exc:
                 print(f"{day} failed: {exc}", file=sys.stderr)

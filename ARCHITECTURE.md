@@ -20,7 +20,7 @@ flowchart TD
 | Source → importer | One dated JSON response per station day. This version reads the Plus station code, transmission ID, UTC-offset start and end times, show ID, genre code and repeat flag. It discards descriptions, titles, person records and media. |
 | Importer → SQLite | Validate the whole day before replacing it in one transaction. Store the URL, retrieval time and hash of the normalized projection. Rows are keyed by station, day and source transmission ID. An identical projection is a no-op. |
 | Editor → SQLite | A repeat correction references a station and transmission ID, with a reason and source. The reviewed view applies the override. Refreshing or temporarily losing a slot preserves the decision. |
-| SQLite → Astro | One read transaction produces a date-ordered JSON export, including absent days. Counts describe schedule slots. Coverage uses UTC elapsed seconds clipped to each Prague day, merging overlapping intervals. |
+| SQLite → Astro | One read transaction produces a date-ordered JSON export, including absent days. A slot counts on its local start date. A carryover returned in the next day’s schedule still contributes coverage there. Coverage uses UTC elapsed seconds clipped to each Prague day, merging overlapping intervals. |
 | Astro → Cloudflare | Both HTML and the downloadable JSON come from that export at build time. Deploy only `site/dist/`. The public read path has no database binding, server-side rendering or dependency on a live ČRo API. |
 
 ## Operation

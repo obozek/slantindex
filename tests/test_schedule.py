@@ -52,6 +52,15 @@ class ScheduleTests(unittest.TestCase):
         self.assertFalse(missing["available"])
         self.assertIsNone(missing["source"])
 
+    def test_midnight_carryover_adds_coverage_without_a_second_start(self):
+        following = date(2026, 11, 23)
+        carryover = json.loads(FIXTURE)["data"][-1]
+        import_day(self.db, following, json.dumps({"data": [carryover]}).encode(), "fixture:next")
+        days = snapshot(self.db, DAY, following)["days"]
+        self.assertEqual(sum(d["slots"] for d in days), 3)
+        self.assertEqual(sum(d["repeatSlots"] for d in days), 1)
+        self.assertEqual(days[1]["coveredSeconds"], 300)
+
     def test_dst_uses_elapsed_seconds(self):
         for day, hours in [(date(2026, 3, 29), 23), (date(2026, 10, 25), 25)]:
             start, end = day_bounds(day)

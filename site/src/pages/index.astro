@@ -25,8 +25,8 @@ const percent = (covered: number, total: number) => (100 * covered / total).toFi
       {synthetic && <p class="notice">Sample archive · Synthetic schedule data</p>}
       <dl>
         <div><dt>Days recovered</dt><dd>{available.length}<small> / {data.days.length}</small></dd></div>
-        <div><dt>Scheduled broadcasts</dt><dd>{slots}</dd></div>
-        <div><dt>Marked as repeats</dt><dd>{repeats}</dd></div>
+        <div><dt>Scheduled broadcasts</dt><dd>{available.length ? slots : "—"}</dd></div>
+        <div><dt>Marked as repeats</dt><dd>{available.length ? repeats : "—"}</dd></div>
       </dl>
       <h2>Daily archive</h2>
       <p>Coverage measures the share of the day represented in the schedule. Overlapping slots count once.</p>

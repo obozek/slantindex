@@ -70,13 +70,14 @@ def snapshot(db, first: date, last: date) -> dict:
                 "SELECT * FROM reviewed_broadcast WHERE station=? AND day=?", station_day
             ).fetchall()
             lower, upper = day_bounds(day)
+            starts = [r for r in rows if lower <= r["start_utc"] < upper]
             days.append({
                 "date": day.isoformat(), "available": bool(record),
                 "source": record[0] if record else None,
-                "secondsInDay": upper - lower, "slots": len(rows),
-                "repeatSlots": sum(r["repeat"] == 1 for r in rows),
-                "unknownRepeatSlots": sum(r["repeat"] is None for r in rows),
-                "missingShowId": sum(r["show_id"] is None for r in rows),
+                "secondsInDay": upper - lower, "slots": len(starts),
+                "repeatSlots": sum(r["repeat"] == 1 for r in starts),
+                "unknownRepeatSlots": sum(r["repeat"] is None for r in starts),
+                "missingShowId": sum(r["show_id"] is None for r in starts),
                 "coveredSeconds": covered_seconds(
                     [(r["start_utc"], r["end_utc"]) for r in rows], lower, upper
                 ),
