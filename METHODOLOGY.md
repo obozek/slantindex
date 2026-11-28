@@ -16,7 +16,7 @@ Index ukazuje, kolik prostoru dostali hosté s různými postoji. Každá minuta
 - **Zkontrolováno 90 %.** Prošli jsme podklady k A, B i C. Zbývá prověřit D.
 - **Podle počtu dílů vyjde 0**, pokud každý host vystoupil v jednom původním dílu. A i B pak mají stejnou váhu: `(1 − 1) / 2 = 0`. Čtenář tak vidí rozdíl mezi počtem pozvání a délkou prostoru.
 
-Vedle průměru zobrazíme minuty v každém stupni škály, důvody nezařazení a podíl odhadnutého času. Rozhovor, u kterého neznáme hosta nebo délku, mezi těmi 100 minutami vůbec není. Zvlášť proto uvedeme, kolik programu jsme dohledali a u kolika dílů známe obsazení.
+Vedle průměru zobrazíme počet různých hostů, podíl minut nejčastěji vysílaného hosta, minuty v každém stupni škály, důvody nezařazení a podíl odhadnutého času. Rozhovor, u kterého neznáme hosta nebo délku, mezi těmi 100 minutami vůbec není. Zvlášť proto uvedeme, kolik programu jsme dohledali a u kolika dílů známe obsazení.
 
 **Kdy index zveřejníme?** Navrhujeme tři podmínky. Skóre na dané ose známe alespoň u tří různých hostů. Tito hosté mají dohromady alespoň deset vystoupení (dva hosté v jednom dílu jsou dvě vystoupení, repríza žádné další nepřidá). Skóre pokrývá alespoň 60 % minut připsaných hostům, při výpočtu podle počtu dílů alespoň 60 % vystoupení. V příkladu mají skóre jen dva hosté, takže web ukáže minuty, počty a důvod, proč index chybí. Hranice ověříme na skutečných datech.
 
@@ -24,6 +24,7 @@ Vedle průměru zobrazíme minuty v každém stupni škály, důvody nezařazen�
 
 ## Jak započítáme vysílací čas
 
+- **Role.** Výchozí přehled zahrne externí hosty a externí komentátory. Vlastní komentáře redaktorů a moderování mají samostatné přehledy. Při výběru více rolí vyjdeme z jednotlivých vystoupení. Člověk, který v jednom dílu zastával dvě vybrané role, přidá jeden díl. Překrývající se čas téže osoby připíšeme jen jednou.
 - **Rozhovor.** Jedinému hostovi připadne celý rozhovor včetně otázek. Pokud dva hosté společně diskutují 40 minut a přesnější rozdělení neznáme, připíšeme každému 20 minut a označíme odhad. Filtr jednoho hosta jeho podíl nezvětší. Moderování sledujeme zvlášť. Dvě role téže osoby ve stejném úseku jí další čas nepřidají.
 - **Magazín.** Započítáme jen úsek věnovaný hostovi. Bez doložené délky nebo při neúplném obsazení zůstane úsek nepřiřazený. Přednost má skutečný čas odvysílání. Délku převzatou z programu či shodné archivní verze označíme jako odhad.
 - **Repríza.** Přičteme znovu odvysílané minuty. U sestřihu pouze zachované úseky. Použijeme roli a hodnocení platné při vzniku dílu, obvykle k datu premiéry. V počtech dílů se host započítá jednou při prvním vysílání dílu na dané stanici. Převzatý díl a neznámé datum prvního vysílání označíme zvlášť.
@@ -55,8 +56,10 @@ U stran lze využít [expertní průzkum CHES](https://www.chesdata.eu/ches-euro
 
 ### Čí skóre použít u hosta
 
-Host může mít na ekonomické ose třeba −1 a jeho instituce +1. **Když ji zastupuje, rozhovoru připíšeme +1. Když mluví za sebe, připíšeme −1.** Na osobní kartě mu v obou případech zůstává −1.
+**Politik.** Na každé ose má přednost jeho výslovně schválené osobní skóre platné v době vzniku dílu. Jinak použijeme skóre strany, kterou tehdy zastupoval. To platí i při vystoupení ve funkci ministra. Má-li ministr vlastní ekonomické skóre −1 a kulturní skóre má jen jeho strana (+1), vystoupení se započte jako −1 v ekonomice a +1 v kultuře. Pokud osobní skóre chybí a politik žádnou stranu nezastupoval, stranu nelze doložit nebo na dané ose nemá skóre, vykážeme minuty jako nezařazené.
+
+**Ostatní hosté.** Host může mít na ekonomické ose −1 a jeho instituce +1. Když ji zastupuje, rozhovoru připíšeme +1. Když mluví za sebe, připíšeme −1. Na osobní kartě mu v obou případech zůstává −1.
 
 Roli určíme z konkrétního dílu a uložíme odkaz. Když pořad hosta představí jako ekonoma dané instituce, počítáme ho jako jejího zástupce. Pokud host výslovně řekne, že mluví za sebe, platí jeho osobní skóre. Samotný údaj o zaměstnavateli v životopisu k přiřazení instituce nestačí.
 
-**Chybí skóre nebo je role nejasná:** minuty vykážeme jako nezařazené pro příslušnou osu. Například 20 minut zástupce instituce s ekonomickým skóre +1 a nehodnocenou kulturou znamená 20 minut s +1 v ekonomice a 20 nezařazených minut v kultuře.
+**Ostatní hosté bez použitelného skóre.** Když chybí skóre nebo je role nejasná, minuty vykážeme jako nezařazené pro příslušnou osu. Například 20 minut zástupce instituce s ekonomickým skóre +1 a nehodnocenou kulturou znamená 20 minut s +1 v ekonomice a 20 nezařazených minut v kultuře.
